@@ -1,0 +1,22 @@
+{
+  "name": "glyphs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ubery/glyphs.git"
+  },
+  "author": "Bartosz Lorek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ubery/glyphs/issues"
+  },
+  "homepage": "https://github.com/ubery/glyphs#readme",
+  "devDependencies": {
+    "unicode": "^10.0.0"
+  }
+}
