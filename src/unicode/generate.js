@@ -1,85 +1,39 @@
-const path = require('path')
-const fs = require('fs')
+// const fs = require('fs')
+// const path = require('path')
+// const BufferStream = require('bufferstream')
+// const forEach = require('lodash/forEach')
 
-const categories = ['Pd', 'Zs']
-const filename = path.join(__dirname, 'table.js')
-generate(categories, filename)
+// generate({
+//     source: path.join(__dirname, 'glyphlist.txt'),
+//     output: path.join(__dirname, 'table.js')
+// })
 
-/*
-Letter
-Lu	Letter uppercase	
-Ll	Letter lowercase	
-Lt	Letter titlecase
-Lm	Letter modifier
-Lo	Letter other
+var fs = require('fs'),
+    util = require('util'),
+    stream = require('stream'),
+    es = require('event-stream')
 
-Mark
-Mn	Mark nonspacing		
-Mc	Mark spacing combining	
-Me	Mark enclosing
+var lineNr = 0
 
-Number
-Nd	Number decimal digit
-Nl	Number letter
-No	Number other
+var s = fs.createReadStream('src/unicode/glyphlist.txt')
+    .pipe(es.split())
+    .pipe(es.mapSync(function (line) {
+        s.pause();
 
-Punctuation
-Pc	Punctuation connector
-Pd	Punctuation dash
-Ps	Punctuation open
-Pe	Punctuation close
-Pi	Punctuation initial quote
-Pf	Punctuation final quote
-Po	Punctuation other
+        //lineNr += 1;
 
-Symbol
-Sm	Symbol math
-Sc	Symbol currency
-Sk	Symbol modifier	
-So	Symbol other
+        console.log(line)
 
-Separator
-Zs	Separator space
-Zl	Separator line
-Zp	Separator paragraph
+        // process line here and call s.resume() when rdy
+        // function below was for logging memory usage
+        //logMemoryUsage(lineNr);
 
-Other
-Cc	Other control
-Cf	Other format
-Cs	Other surrogate
-Co	Other private use
-Cn	Other not assigned
-*/
-
-function generate(categories, filename) {
-    let output = 'module.exports = {'
-
-    categories.forEach((cat, catIdx) => {
-        let data = require('unicode/category/' + cat),
-            keys = Object.keys(data),
-            length = keys.length,
-            content = ''
-
-        if (catIdx > 0) {
-            output += ','
-        }
-        for (let i = 0; i < length; i++) {
-            if (i > 0) {
-                content += ','
-            }
-            let entity = data[keys[i]]
-            content += JSON.stringify({
-                code: entity.value,
-                name: entity.name.toLowerCase(),
-                symbol: entity.symbol
-            })
-        }
-        output += cat + ':[' + content + ']'
+        s.resume();
     })
-
-    output += '}'
-    fs.writeFileSync(filename, output, {
-        encoding: 'utf8'
-    })
-    console.log('lookup table was generated successfully')
-}
+        .on('error', function (err) {
+            console.log('Error while reading file.', err);
+        })
+        .on('end', function () {
+            console.log('Read entire file.')
+        })
+    );
