@@ -1,12 +1,9 @@
 var path = require('path');
 
 module.exports = {
-    entry: './src/index.js',
-    // entry: {
-    //     'background': './src/background.js',
-    //     'content-script': './src/content-script.js',
-    //     'options': './src/options.js'
-    // },
+    entry: {
+        'popup': './src/popup.js'
+    },
     output: {
         path: path.join(__dirname, 'dist'),
         filename: '[name].js'
