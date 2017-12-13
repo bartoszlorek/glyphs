@@ -70,7 +70,7 @@ function generate(categories, filename) {
             let entity = data[keys[i]]
             content += JSON.stringify({
                 code: entity.value,
-                name: entity.name,
+                name: entity.name.toLowerCase(),
                 symbol: entity.symbol
             })
         }
@@ -78,5 +78,8 @@ function generate(categories, filename) {
     })
 
     output += '}'
-    fs.writeFileSync(filename, output, { encoding: 'utf8' });
+    fs.writeFileSync(filename, output, {
+        encoding: 'utf8'
+    })
+    console.log('lookup table was generated successfully')
 }
