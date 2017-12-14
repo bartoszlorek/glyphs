@@ -7,7 +7,7 @@ const error = name => err =>
     console.log(name + ' error', err)
 
 generate({
-    source: path.join(__dirname, 'aglfn.txt'),
+    source: path.join(__dirname, 'resources/aglfn.txt'),
     output: path.join(__dirname, 'table.js'),
     iteratee: (line, blocks) => {
         let fields = line.split(';'),
@@ -15,6 +15,7 @@ generate({
         return {
             value: fields[0],
             name: fields[2].toLowerCase(),
+            symbol: escapeSymbol(fields[0]),
             block: blockIndex(blocks, block)
         }
     }
@@ -59,4 +60,8 @@ function blockIndex(array, name) {
     }
     array.push(name)
     return array.length - 1
+}
+
+function escapeSymbol(unicode) {
+    return String.fromCharCode(parseInt(unicode, 16))
 }
