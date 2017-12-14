@@ -1,19 +1,23 @@
 * {
     box-sizing: border-box;
 }
+
 body {
     margin: 0;
     padding: 0;
 }
-.set, .item {
+
+.container, .glyph {
     border: 1px solid #dadada;
     display: flex;
 }
-.set {
+
+.container {
     flex-wrap: wrap;
     border-width: 1px 0 0 1px;
 }
-.item {
+
+.glyph {
     position: relative;
     width: 10%;
     border-width: 0 1px 1px 0;
@@ -21,17 +25,20 @@ body {
     align-items: center;
     justify-content: center;
 }
-.item:before {
+
+.glyph:before {
     content: "";
     display: block;
     padding-top: 100%;
     height: 0;
 }
+
 .symbol {
-    font-size: 8vw;
+    font-size: 7vw;
     line-height: 1em;
     background: #f2f2f2;
 }
-.code {
+
+.value {
     display: none;
 }

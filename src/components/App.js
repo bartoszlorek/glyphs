@@ -1,8 +1,7 @@
 import React from 'react'
-import { map } from 'lodash'
 import table from '../unicode/table'
 
-import Category from './Category'
+import Glyph from './Glyph'
 import style from './style.css'
 
 class App extends React.Component {
@@ -14,14 +13,10 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <input type='text'/>
+                <input type='text' />
                 <div className={style.container}>
-                    {map(table, (chars, key) =>
-                        <Category
-                            key={key}
-                            description={key}
-                            characters={chars}
-                        />
+                    {table.glyphs.map((data, index) =>
+                        <Glyph key={index} data={data} />
                     )}
                 </div>
             </div>
