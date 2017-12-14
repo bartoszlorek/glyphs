@@ -1,57 +1,27 @@
-const fs = require('fs')
-const es = require('event-stream')
+const fileParser = require('../.utils/file-parser')
 const unicodeRange = require('unicode-range')
 const path = require('path')
 
-const error = name => err =>
-    console.log(name + ' error', err)
-
-generate({
-    source: path.join(__dirname, 'resources/aglfn.txt'),
+fileParser({
+    source: path.join(__dirname, './resources/aglfn.txt'),
     output: path.join(__dirname, 'table.js'),
-    iteratee: (line, blocks) => {
+    iteratee: (line, props) => {
         let fields = line.split(';'),
             block = unicodeRange(fields[0])
-        return {
+        return JSON.stringify({
             value: fields[0],
             name: fields[2].toLowerCase(),
             symbol: escapeSymbol(fields[0]),
-            block: blockIndex(blocks, block)
-        }
-    }
+            block: blockIndex(props.blocks, block)
+        })
+    },
+    props: {
+        blocks: []
+    },
+    before: 'module.exports={glyphs:[',
+    after: (props) => '], blocks:' +
+        JSON.stringify(props.blocks) + '}'
 })
-
-function generate({ source, output, iteratee }) {
-    let writer = fs.createWriteStream(output, { encoding: 'utf8' }),
-        multiline = false,
-        blocks = []
-
-    writer.on('error', error('writer'))
-    writer.write('module.exports={glyphs:[')
-
-    fs.createReadStream(source, { encoding: 'utf8' })
-        .pipe(es.split())
-        .pipe(es.mapSync(line => {
-            if (line.length > 0 && line[0] !== '#') {
-                let result = iteratee(line, blocks)
-                if (result) {
-                    if (multiline === true) {
-                        writer.write(',')
-                    }
-                    writer.write(JSON.stringify(result))
-                    multiline = true
-                }
-            }
-        })
-        .on('error', error('reader'))
-        .on('end', () => {
-            writer.write('], blocks:' +
-                JSON.stringify(blocks) + '}')
-            writer.end()
-            console.log('end')
-        })
-    )
-}
 
 function blockIndex(array, name) {
     let index = array.indexOf(name)
@@ -62,6 +32,6 @@ function blockIndex(array, name) {
     return array.length - 1
 }
 
-function escapeSymbol(unicode) {
-    return String.fromCharCode(parseInt(unicode, 16))
+function escapeSymbol(code) {
+    return String.fromCharCode(parseInt(code, 16))
 }
