@@ -1,5 +1,5 @@
 import React from 'react'
-import table from '../unicode/table'
+import table from '../unicode/lookup-table/aglfn'
 
 import Glyph from './Glyph'
 import style from './style.css'
