@@ -1,3 +1,21 @@
+# -----------------------------------------------------------
+# http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
+# value;
+# name;
+# category;
+# class;
+# bidirectional_category;
+# mapping;
+# decimal_digit_value;
+# digit_value;
+# numeric_value;
+# mirrored;
+# unicode_name
+# comment
+# uppercase_mapping
+# lowercase_mapping
+# titlecase_mapping
+#
 0000;<control>;Cc;0;BN;;;;;N;NULL;;;;
 0001;<control>;Cc;0;BN;;;;;N;START OF HEADING;;;;
 0002;<control>;Cc;0;BN;;;;;N;START OF TEXT;;;;
