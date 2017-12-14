@@ -8,6 +8,7 @@ function fileParser({
     source,
     output,
     iteratee,
+    separator = '',
     before = '',
     after = '',
     props = {}
@@ -24,8 +25,8 @@ function fileParser({
             if (line.length > 0 && line[0] !== '#') {
                 let result = iteratee(line, props)
                 if (result) {
-                    if (multiline === true) {
-                        writer.write(',')
+                    if (multiline === true && separator) {
+                        writer.write(separator)
                     }
                     writer.write(result)
                     multiline = true

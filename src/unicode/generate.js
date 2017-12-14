@@ -18,6 +18,7 @@ fileParser({
     props: {
         blocks: []
     },
+    separator: ',',
     before: 'module.exports={glyphs:[',
     after: (props) => '], blocks:' +
         JSON.stringify(props.blocks) + '}'
