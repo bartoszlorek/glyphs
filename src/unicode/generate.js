@@ -26,7 +26,7 @@ function generate({ source, output, iteratee }) {
         blocks = []
 
     writer.on('error', error('writer'))
-    writer.write('module.exports={records:[')
+    writer.write('module.exports={glyphs:[')
 
     fs.createReadStream(source, { encoding: 'utf8' })
         .pipe(es.split())
