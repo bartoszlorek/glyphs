@@ -1,39 +1,62 @@
-// const fs = require('fs')
-// const path = require('path')
-// const BufferStream = require('bufferstream')
-// const forEach = require('lodash/forEach')
+const fs = require('fs')
+const es = require('event-stream')
+const unicodeRange = require('unicode-range')
+const path = require('path')
 
-// generate({
-//     source: path.join(__dirname, 'glyphlist.txt'),
-//     output: path.join(__dirname, 'table.js')
-// })
+const error = name => err =>
+    console.log(name + ' error', err)
 
-var fs = require('fs'),
-    util = require('util'),
-    stream = require('stream'),
-    es = require('event-stream')
+generate({
+    source: path.join(__dirname, 'aglfn.txt'),
+    output: path.join(__dirname, 'table.js'),
+    iteratee: (line, blocks) => {
+        let fields = line.split(';'),
+            block = unicodeRange(fields[0])
+        return {
+            value: fields[0],
+            name: fields[2].toLowerCase(),
+            block: blockIndex(blocks, block)
+        }
+    }
+})
 
-var lineNr = 0
+function generate({ source, output, iteratee }) {
+    let writer = fs.createWriteStream(output, { encoding: 'utf8' }),
+        multiline = false,
+        blocks = []
 
-var s = fs.createReadStream('src/unicode/glyphlist.txt')
-    .pipe(es.split())
-    .pipe(es.mapSync(function (line) {
-        s.pause();
+    writer.on('error', error('writer'))
+    writer.write('module.exports={records:[')
 
-        //lineNr += 1;
-
-        console.log(line)
-
-        // process line here and call s.resume() when rdy
-        // function below was for logging memory usage
-        //logMemoryUsage(lineNr);
-
-        s.resume();
-    })
-        .on('error', function (err) {
-            console.log('Error while reading file.', err);
+    fs.createReadStream(source, { encoding: 'utf8' })
+        .pipe(es.split())
+        .pipe(es.mapSync(line => {
+            if (line.length > 0 && line[0] !== '#') {
+                let result = iteratee(line, blocks)
+                if (result) {
+                    if (multiline === true) {
+                        writer.write(',')
+                    }
+                    writer.write(JSON.stringify(result))
+                    multiline = true
+                }
+            }
         })
-        .on('end', function () {
-            console.log('Read entire file.')
+        .on('error', error('reader'))
+        .on('end', () => {
+            writer.write('], blocks:' +
+                JSON.stringify(blocks) + '}')
+            writer.end()
+            console.log('end')
         })
-    );
+    )
+}
+
+function blockIndex(array, name) {
+    let index = array.indexOf(name)
+    if (index > -1) {
+        return index
+    }
+    array.push(name)
+    return array.length - 1
+}
