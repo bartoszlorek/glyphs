@@ -1,8 +1,11 @@
+const path = require('path')
+const unicodeRange = require('unicode-range')
 const fileParser = require('../.utils/file-parser')
+const escSymbol = require('../.utils/esc-symbol')
+const getIndex = require('./.internal/get-index')
+
 const unidata = require('./lookup-table/unidata')
 const catdata = require('./lookup-table/categories')
-const unicodeRange = require('unicode-range')
-const path = require('path')
 
 const toDescription = name => catdata[name]
 
@@ -17,7 +20,7 @@ fileParser({
         return JSON.stringify({
             value: fields[0],
             name: fields[2].toLowerCase(),
-            symbol: escapeSymbol(fields[0]),
+            symbol: escSymbol(fields[0]),
             category: getIndex(props.categories, category),
             block: getIndex(props.blocks, block)
         })
@@ -34,16 +37,3 @@ fileParser({
         return `],categories:${c},blocks:${b}}`
     }
 })
-
-function getIndex(array, name) {
-    let index = array.indexOf(name)
-    if (index > -1) {
-        return index
-    }
-    array.push(name)
-    return array.length - 1
-}
-
-function escapeSymbol(code) {
-    return String.fromCharCode(parseInt(code, 16))
-}

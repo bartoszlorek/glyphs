@@ -1,6 +1,6 @@
-const fileParser = require('../.utils/file-parser')
-const unicodeRange = require('unicode-range')
 const path = require('path')
+const unicodeRange = require('unicode-range')
+const fileParser = require('../.utils/file-parser')
 
 fileParser({
     source: path.join(__dirname, './resources/unidata.txt'),
