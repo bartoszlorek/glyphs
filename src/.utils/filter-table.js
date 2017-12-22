@@ -1,5 +1,7 @@
 import { mapValues } from 'lodash'
 
+const normalize = value => String(value).toLowerCase()
+
 function filterTable(table, spec) {
     if (table == null) {
         return []
@@ -12,16 +14,14 @@ function filterTable(table, spec) {
     if (length < 0) {
         return table
     }
-    let lowerSpec = mapValues(spec, value =>
-        value.toLowerCase())
-
+    let normSpec = mapValues(spec, normalize)
     return table.filter(record => {
         let index = length,
             score = length
         while (index--) {
             let prop = props[index],
-                value = record[prop].toLowerCase()
-            if (value.indexOf(lowerSpec[prop]) > -1) {
+                value = normalize(record[prop])
+            if (value.indexOf(normSpec[prop]) > -1) {
                 score -= 1
             }
             if (index < score) {
