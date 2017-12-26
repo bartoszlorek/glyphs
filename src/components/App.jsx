@@ -4,7 +4,7 @@ import { bind } from '../.utils/react-utils'
 import filterTable from '../.utils/filter-table'
 
 import Glyph from './Glyph'
-import style from './style.css'
+import bem from './bem'
 
 class App extends React.Component {
     constructor(props) {
@@ -13,7 +13,8 @@ class App extends React.Component {
             'handleSearch'
         ])
         this.state = {
-            glyphs: []
+            glyphs: [],
+            value: ''
         }
     }
 
@@ -23,10 +24,10 @@ class App extends React.Component {
         })
     }
 
-    handleSearch(e) {
+    handleSearch({ target }) {
         this.setState({
             glyphs: filterTable(table.glyphs, {
-                name: e.target.value
+                name: target.value
             })
         })
     }
@@ -35,10 +36,10 @@ class App extends React.Component {
         return (
             <div>
                 <input
-                    type='text'
+                    className={bem('search')}
                     onChange={this.handleSearch}
                 />
-                <div className={style.container}>
+                <div className={bem('container')}>
                     {this.state.glyphs.map((data, index) =>
                         <Glyph key={index} data={data} />
                     )}

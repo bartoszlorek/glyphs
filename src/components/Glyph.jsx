@@ -1,15 +1,15 @@
 import React from 'react'
-import style from './style.css'
+import bem from './bem'
 
 function Glyph(props) {
     let { value, name, symbol } = props.data
     return (
         <div
-            className={style.glyph}
+            className={bem('glyph')}
             data-name={name}
         >
-            <span className={style.symbol}>{symbol}</span>
-            <span className={style.value}>{value}</span>
+            <span className={bem('symbol')}>{symbol}</span>
+            <span className={bem('value')}>{value}</span>
         </div>
     )
 
