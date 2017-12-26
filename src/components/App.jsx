@@ -13,8 +13,7 @@ class App extends React.Component {
             'handleSearch'
         ])
         this.state = {
-            glyphs: [],
-            value: ''
+            glyphs: []
         }
     }
 
