@@ -7,7 +7,8 @@ body {
     padding: 0;
 }
 
-.container, .glyph {
+.container,
+.glyph {
     border: 1px solid #dadada;
     display: flex;
 }
@@ -41,4 +42,11 @@ body {
 
 .value {
     display: none;
+}
+
+.search {
+    width: 100%;
+    padding: .65em;
+    margin: 0 0 8px;
+    border: 1px solid #ddd;
 }
