@@ -2,8 +2,7 @@ import React from 'react'
 import table from '../unicode/lookup-table/aglfn'
 import { bind } from '../.utils/react-utils'
 import filterTable from '../.utils/filter-table'
-import isNumeric from '../.utils/is-numeric'
-import escNumeric from '../.utils/esc-numeric'
+import isUnicode from '../.utils/is-unicode'
 
 import Glyph from './Glyph'
 import bem from './bem'
@@ -28,9 +27,9 @@ class App extends React.Component {
     handleSearch({ target }) {
         let { value } = target, spec
 
-        if (isNumeric(value)) {
+        if (isUnicode(value)) {
             spec = {
-                value: escNumeric(value)
+                value
             }
         } else {
             spec = {
