@@ -2,6 +2,8 @@ import React from 'react'
 import table from '../unicode/lookup-table/aglfn'
 import { bind } from '../.utils/react-utils'
 import filterTable from '../.utils/filter-table'
+import isNumeric from '../.utils/is-numeric'
+import escNumeric from '../.utils/esc-numeric'
 
 import Glyph from './Glyph'
 import bem from './bem'
@@ -24,10 +26,22 @@ class App extends React.Component {
     }
 
     handleSearch({ target }) {
+        let { value } = target, spec
+
+        if (isNumeric(value)) {
+            spec = {
+                value: escNumeric(value)
+            }
+        } else {
+            spec = {
+                name: value
+            }
+        }
         this.setState({
-            glyphs: filterTable(table.glyphs, {
-                name: target.value
-            })
+            glyphs: filterTable(
+                table.glyphs,
+                spec
+            )
         })
     }
 
