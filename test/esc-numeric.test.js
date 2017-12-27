@@ -10,6 +10,7 @@ describe('escNumeric.js', () => {
 
     it('should match only numbers', () => {
         expect(escNumeric('u100')).toBe('100')
+        expect(escNumeric('uu')).toBe('')
     })
 
     it('should preserved leading zero', () => {

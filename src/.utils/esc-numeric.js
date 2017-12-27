@@ -1,8 +1,12 @@
 function escNumeric(value) {
-    let result = value && value
-        .match(/[\d]+/g)
-        .join('') || null
-    return result != null ? result : ''
+    let result = value &&
+        value.match(/[\d]+/g) ||
+        null
+
+    if (result == null) {
+        return ''
+    }
+    return result.join('')
 }
 
 export default escNumeric
