@@ -1,66 +1,68 @@
-import { mapValues, isArray, isPlainObject } from 'lodash'
+import { isPlainObject, isArray, isFunction } from 'lodash'
 
-const makeResolve = compare => (data, value) => {
-    let props = Object.keys(value),
-        index = props.length,
-        score = index
+const sum = (args, data) => args.reduce((s, f) => s + f(data), 0)
 
-    while (index--) {
-        let prop = props[index]
-        if (compare(data[prop], value[prop], prop)) {
-            score -= 1
-        }
-        if (index < score) {
-            return false
-        }
-    }
-    return true
+const logicDefault = 'or'
+const logic = {
+    'and': args => data => sum(args, data) === args.length,
+    'or': args => data => sum(args, data) > 0
 }
 
-const logicalTest = (data, value, func) => {
-    let operator = 'or'
-    if (typeof value[0] === 'string') {
-        operator = value[0]
-        value = value.slice(1)
+const makePredicate = method => {
+    if (!isFunction(method)) {
+        throw new Error('makePredicate expected a function')
     }
-    let length = value.length,
-        result = value
-        .map(item => +baseFilter(data, item))
-        .reduce((a, b) => a + b, 0)
+    return queryObject => {
+        if (!isPlainObject(queryObject)) {
+            throw new Error(`"${queryObject}" is not a proper query object`)
+        }
+        const props = Object.keys(queryObject)
+        return dataObject => {
+            let index = props.length,
+                score = index
 
-    if (operator === 'or') {
-        return result > 0
+            while (index--) {
+                let prop = props[index]
+                if (method(dataObject[prop], queryObject[prop], prop)) {
+                    score -= 1
+                }
+                if (index < score) {
+                    return false
+                }
+            }
+            return true
+        }
     }
-    if (operator === 'and') {
-        return result === length
+}
+
+const makeWrapper = predicate => {
+    if (!isFunction(predicate)) {
+        throw new Error('makeWrapper expected a function to predicate')
     }
+    let wrapper, wrap = a => wrapper(a)
+
+    wrapper = query => {
+        if (isArray(query)) {
+            if (typeof query[0] === 'string') {
+                return logic[query[0]](query
+                    .slice(1)
+                    .map(wrap))
+            }
+            return logic[logicDefault](query
+                .map(wrap))
+        }
+        return predicate(query)
+    }
+    return wrapper
+}
+
+export {
+    makeWrapper,
+    makePredicate,
+    logic
 }
 
 const normalize = value => String(value).toLowerCase()
-const resolve = makeResolve((data, query) => {
+export default makeWrapper(makePredicate((data, query) => {
     return normalize(data).indexOf(normalize(query)) > -1
-})
-
-function baseFilter(data, value) {
-    if (isPlainObject(value)) {
-        return resolve(data, value)
-    }
-    if (isArray(value)) {
-        return logicalTest(data, value, baseFilter)
-    }
-    return false
-}
-
-function filterTable(table, query) {
-    if (table == null) {
-        return []
-    }
-    if (query == null) {
-        return table
-    }
-    return table.filter(data =>
-        baseFilter(data, query)
-    )
-}
-
-export default filterTable
+}))
