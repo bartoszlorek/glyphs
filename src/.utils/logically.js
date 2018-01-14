@@ -1,23 +1,23 @@
 import { isPlainObject, isArray, isFunction } from 'lodash'
 
-const sum = (args, data) => args.reduce((s, f) => s + f(data), 0)
+const DEFAULT_OPERATOR = 'or'
 
-const logicDefault = 'or'
-const logic = {
+const sum = (args, data) => args.reduce((s, f) => s + f(data), 0)
+const operators = {
     'and': args => data => sum(args, data) === args.length,
     'or': args => data => sum(args, data) > 0
 }
 
-const makePredicate = method => {
+function makePredicate(method) {
     if (!isFunction(method)) {
-        throw new Error('makePredicate expected a function')
+        throw new Error('makePredicate expects a function')
     }
-    return queryObject => {
+    return (queryObject) => {
         if (!isPlainObject(queryObject)) {
             throw new Error(`"${queryObject}" is not a proper query object`)
         }
         const props = Object.keys(queryObject)
-        return dataObject => {
+        return (dataObject) => {
             let index = props.length,
                 score = index
 
@@ -35,31 +35,37 @@ const makePredicate = method => {
     }
 }
 
-const makeWrapper = predicate => {
-    if (!isFunction(predicate)) {
-        throw new Error('makeWrapper expected a function to predicate')
-    }
-    let wrapper, wrap = a => wrapper(a)
+function wrapQuery(wrap, query) {
+    let operator = query[0]
 
-    wrapper = query => {
+    if (typeof operator !== 'string') {
+        return operators[DEFAULT_OPERATOR](query.map(wrap))
+    }
+    if (operators[operator] === undefined) {
+        throw new Error(`"${operator}" is not a registered logical operator`)
+    }
+    return operators[operator](query.slice(1).map(wrap))
+}
+
+function makeWrapper(predicate) {
+    if (!isFunction(predicate)) {
+        throw new Error('makeWrapper expects a function to predicate')
+    }
+    let wrapper,
+        wrap = a => wrapper(a)
+
+    return wrapper = query => {
         if (isArray(query)) {
-            if (typeof query[0] === 'string') {
-                return logic[query[0]](query
-                    .slice(1)
-                    .map(wrap))
-            }
-            return logic[logicDefault](query
-                .map(wrap))
+            return wrapQuery(wrap, query)
         }
         return predicate(query)
     }
-    return wrapper
 }
 
 export {
     makeWrapper,
     makePredicate,
-    logic
+    operators
 }
 
 const normalize = value => String(value).toLowerCase()
