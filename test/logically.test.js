@@ -30,37 +30,38 @@ describe('logical operators', () => {
     })
 })
 
-describe('internal methods', () => {
+describe('makePredicate', () => {
+    const compare = (a, b) => a == b
+    const normalize = a => String(a).toLowerCase()
+
+    it('should return boolean', () => {
+        const test = makePredicate(compare)({ a: 1 })
+        expect(test({ a: 1 })).toBe(true)
+        expect(test({ a: 2 })).toBe(false)
+        expect(test({ b: 1 })).toBe(false)
+    })
+
+    it('should normalize query object', () => {
+        const test = makePredicate(compare, normalize)({ a: 'AA' })
+        expect(test({ a: 'AA' })).toBe(true)
+        expect(test({ a: 'aa' })).toBe(true)
+        expect(test({ b: 'bb' })).toBe(false)
+    })
+})
+
+describe('makeWrapper', () => {
     const compare = (a, b) => a == b
     const predicate = makePredicate(compare)
     const wrapper = makeWrapper(predicate)
 
-    it('makePredicate returns boolean', () => {
-        let test = predicate({ a: 1 }),
-            resultA = test({ a: 1 }),
-            resultB = test({ a: 2 }),
-            resultC = test({ b: 1 })
-        expect(resultA).toBe(true)
-        expect(resultB).toBe(false)
-        expect(resultC).toBe(false)
-    })
-
-    it('makeWrapper returns boolean', () => {
-        let test = wrapper([
+    it('should return boolean', () => {
+        const test = wrapper([
             'and', { a: 1 },
             ['or', { b: 2 }, { c: 1 }]
         ])
-        let resultA = test({ a: 1, b: 2 }),
-            resultB = test({ a: 1, c: 1 }),
-            resultC = test({ a: 1 })
-
-        test({ a: 1 })
-        test({ a: 10 })
-        test({ a: 22 })
-
-        expect(resultA).toBe(true)
-        expect(resultB).toBe(true)
-        expect(resultC).toBe(false)
+        expect(test({ a: 1, b: 2 })).toBe(true)
+        expect(test({ a: 1, c: 1 })).toBe(true)
+        expect(test({ a: 1 })).toBe(false)
     })
 })
 

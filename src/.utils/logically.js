@@ -1,4 +1,4 @@
-import { isPlainObject, isArray, isFunction } from 'lodash'
+import { isPlainObject, isArray, isFunction, mapValues } from 'lodash'
 
 const DEFAULT_OPERATOR = 'or'
 
@@ -8,22 +8,34 @@ const operators = {
     'or': args => data => sum(args, data) > 0
 }
 
-function makePredicate(method) {
-    if (!isFunction(method)) {
+function makePredicate(compare, normalize) {
+    if (!isFunction(compare)) {
         throw new Error('makePredicate expects a function')
     }
     return (queryObject) => {
         if (!isPlainObject(queryObject)) {
             throw new Error(`"${queryObject}" is not a proper query object`)
         }
+        if (normalize != null) {
+            if (!isFunction(normalize)) {
+                throw new Error('makePredicate expects normalize as a function')
+            }
+            queryObject = mapValues(queryObject, normalize)
+        }
+
         const props = Object.keys(queryObject)
         return (dataObject) => {
             let index = props.length,
                 score = index
 
             while (index--) {
-                let prop = props[index]
-                if (method(dataObject[prop], queryObject[prop], prop)) {
+                let prop = props[index],
+                    data = dataObject[prop]
+
+                if (normalize != null) {
+                    data = normalize(data)
+                }
+                if (compare(data, queryObject[prop], prop)) {
                     score -= 1
                 }
                 if (index < score) {
