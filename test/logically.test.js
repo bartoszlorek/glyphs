@@ -32,7 +32,7 @@ describe('logical operators', () => {
 
 describe('makePredicate', () => {
     const compare = (a, b) => a == b
-    const normalize = a => a.toLowerCase()
+    const normalize = a => String(a).toLowerCase()
 
     it('should return boolean', () => {
         const test = makePredicate(compare)({ a: 1 })
