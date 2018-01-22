@@ -32,7 +32,7 @@ const object = {
 }
 
 const array = {
-    equal: value => item => item === value,
+    has: value => item => item === value,
     contain: value => item => {
         return String(item).indexOf(value) > -1
     },
