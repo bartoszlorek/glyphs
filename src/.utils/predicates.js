@@ -1,4 +1,6 @@
-/* based on https://codepen.io/Universalist/post/predicates-in-javascript */
+/* based on https://codepen.io/Universalist/post/predicates-in-javascript
+ * need more? https://github.com/landau/predicate
+ */
 
 // Logical Operators
 const and = (...args) => x => args.every(a => a(x))
@@ -15,34 +17,24 @@ const lessEqual = x => y => y <= x
 const positive = x => x > 0
 const negative = x => x < 0
 
+const equal = x => y => x === y
+const contain = x => source => String(source).indexOf(x) > -1
+
+const icontain = x => {
+    x = String(x).toLowerCase()
+    return source =>
+        String(source)
+            .toLowerCase()
+            .indexOf(x) > -1
+}
+
 // Data Operators
 const object = {
     has: key => obj => obj.hasOwnProperty(key),
-    equal: (key, value) => obj => obj[key] === value,
-    contain: (key, value) => obj => {
-        return String(obj[key]).indexOf(value) > -1
-    },
-    icontain: (key, value) => {
-        value = String(value).toLowerCase()
-        return obj =>
-            String(obj[key])
-                .toLowerCase()
-                .indexOf(value) > -1
-    }
-}
-
-const array = {
-    has: value => item => item === value,
-    contain: value => item => {
-        return String(item).indexOf(value) > -1
-    },
-    icontain: value => {
-        value = String(value).toLowerCase()
-        return item =>
-            String(item)
-                .toLowerCase()
-                .indexOf(value) > -1
-    }
+    equal: (key, x) => obj => equal(x)(obj[key]),
+    contain: (key, x) => obj => contain(x)(obj[key]),
+    icontain: (key, x) => obj => icontain(x)(obj[key]),
+    is: (key, fn) => obj => fn(obj[key])
 }
 
 export default {
@@ -55,8 +47,10 @@ export default {
     lessEqual,
     positive,
     negative,
-    object,
-    array
+    equal,
+    contain,
+    icontain,
+    object
 }
 
 export {
@@ -69,6 +63,8 @@ export {
     lessEqual,
     positive,
     negative,
-    object,
-    array
+    equal,
+    contain,
+    icontain,
+    object
 }
