@@ -6,11 +6,12 @@ import {
     less,
     greaterEqual,
     lessEqual,
+    between,
     positive,
     negative,
     equal,
-    contain,
-    icontain,
+    contains,
+    icontains,
     object
 } from '../src/.utils/predicates'
 
@@ -38,25 +39,38 @@ describe('Logical Operators', () => {
 
 describe('Comparison Operators', () => {
     it('greater', () => {
-        expect(greater(1)(2)).toBe(true)
-        expect(greater(3)(2)).toBe(false)
+        let test = greater(2)
+        expect(test(1)).toBe(false)
+        expect(test(2)).toBe(false)
+        expect(test(3)).toBe(true)
     })
 
     it('less', () => {
-        expect(less(2)(1)).toBe(true)
-        expect(less(2)(3)).toBe(false)
+        let test = less(2)
+        expect(test(1)).toBe(true)
+        expect(test(2)).toBe(false)
+        expect(test(3)).toBe(false)
     })
 
     it('greaterEqual', () => {
-        expect(greaterEqual(1)(2)).toBe(true)
-        expect(greaterEqual(2)(2)).toBe(true)
-        expect(greaterEqual(3)(2)).toBe(false)
+        let test = greaterEqual(2)
+        expect(test(1)).toBe(false)
+        expect(test(2)).toBe(true)
+        expect(test(3)).toBe(true)
     })
 
     it('lessEqual', () => {
-        expect(lessEqual(2)(1)).toBe(true)
-        expect(lessEqual(1)(1)).toBe(true)
-        expect(lessEqual(2)(3)).toBe(false)
+        let test = lessEqual(2)
+        expect(test(1)).toBe(true)
+        expect(test(2)).toBe(true)
+        expect(test(3)).toBe(false)
+    })
+
+    it('between', () => {
+        let test = between(0, 2)
+        expect(test(0)).toBe(true)
+        expect(test(1)).toBe(true)
+        expect(test(3)).toBe(false)
     })
 
     it('positive', () => {
@@ -70,20 +84,21 @@ describe('Comparison Operators', () => {
     })
 
     it('equal', () => {
-        expect(equal('a')('a')).toBe(true)
-        expect(equal('a')('b')).toBe(false)
+        let test = equal('a')
+        expect(test('a')).toBe(true)
+        expect(test('b')).toBe(false)
     })
 
-    it('contain (case sensitive)', () => {
-        expect(contain('a')('aa')).toBe(true)
-        expect(contain('A')('aa')).toBe(false)
-        expect(contain('b')('aa')).toBe(false)
+    it('contains (case sensitive)', () => {
+        expect(contains('a')('aa')).toBe(true)
+        expect(contains('A')('aa')).toBe(false)
+        expect(contains('b')('aa')).toBe(false)
     })
 
-    it('icontain (case insensitive)', () => {
-        expect(icontain('a')('aa')).toBe(true)
-        expect(icontain('A')('aa')).toBe(true)
-        expect(icontain('b')('aa')).toBe(false)
+    it('icontains (case insensitive)', () => {
+        expect(icontains('a')('aa')).toBe(true)
+        expect(icontains('A')('aa')).toBe(true)
+        expect(icontains('b')('aa')).toBe(false)
     })
 })
 
@@ -98,12 +113,14 @@ describe('Data Operators: Object', () => {
             name: 'aa',
             group: 'yy',
             value: 2,
-            extra: 1
+            extra: 1,
+            more: 0
         },
         {
             name: 'bb',
             group: 'xx',
-            value: 3
+            value: 3,
+            extra: 1
         },
         {
             name: 'cc',
@@ -114,6 +131,13 @@ describe('Data Operators: Object', () => {
 
     it('.has', () => {
         let result = data.filter(object.has('extra'))
+        expect(result.length).toBe(2)
+        expect(result[0].name).toBe('aa')
+        expect(result[1].name).toBe('bb')
+    })
+
+    it('.has (multiple)', () => {
+        let result = data.filter(object.has('extra', 'more'))
         expect(result.length).toBe(1)
         expect(result[0].name).toBe('aa')
     })
@@ -124,17 +148,17 @@ describe('Data Operators: Object', () => {
         expect(result[0].name).toBe('bb')
     })
 
-    it('.contain (case sensitive)', () => {
+    it('.contains (case sensitive)', () => {
         let result = data.filter(
-            or(object.contain('group', 'yy'), object.contain('name', 'a'))
+            or(object.contains('group', 'yy'), object.contains('name', 'a'))
         )
         expect(result.length).toBe(1)
         expect(result[0].value).toBe(2)
     })
 
-    it('.icontain (case insensitive)', () => {
+    it('.icontains (case insensitive)', () => {
         let result = data.filter(
-            or(object.icontain('group', 'yy'), object.icontain('name', 'a'))
+            or(object.icontains('group', 'yy'), object.icontains('name', 'a'))
         )
         expect(result.length).toBe(3)
         expect(result[0].value).toBe(1)

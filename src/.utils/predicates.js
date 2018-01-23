@@ -13,14 +13,15 @@ const less = x => y => y < x
 
 const greaterEqual = x => y => y >= x
 const lessEqual = x => y => y <= x
+const between = (x, y) => and(greaterEqual(x), lessEqual(y))
 
 const positive = x => x > 0
 const negative = x => x < 0
 
 const equal = x => y => x === y
-const contain = x => source => String(source).indexOf(x) > -1
+const contains = x => source => String(source).indexOf(x) > -1
 
-const icontain = x => {
+const icontains = x => {
     x = String(x).toLowerCase()
     return source =>
         String(source)
@@ -30,10 +31,10 @@ const icontain = x => {
 
 // Data Operators
 const object = {
-    has: key => obj => obj.hasOwnProperty(key),
+    has: (...keys) => obj => keys.every(k => obj.hasOwnProperty(k)),
     equal: (key, x) => obj => equal(x)(obj[key]),
-    contain: (key, x) => obj => contain(x)(obj[key]),
-    icontain: (key, x) => obj => icontain(x)(obj[key]),
+    contains: (key, x) => obj => contains(x)(obj[key]),
+    icontains: (key, x) => obj => icontains(x)(obj[key]),
     is: (key, fn) => obj => fn(obj[key])
 }
 
@@ -45,11 +46,12 @@ export default {
     less,
     greaterEqual,
     lessEqual,
+    between,
     positive,
     negative,
     equal,
-    contain,
-    icontain,
+    contains,
+    icontains,
     object
 }
 
@@ -61,10 +63,11 @@ export {
     less,
     greaterEqual,
     lessEqual,
+    between,
     positive,
     negative,
     equal,
-    contain,
-    icontain,
+    contains,
+    icontains,
     object
 }
