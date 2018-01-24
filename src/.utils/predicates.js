@@ -19,14 +19,13 @@ const positive = x => x > 0
 const negative = x => x < 0
 
 const equal = x => y => x === y
-const contains = x => source => String(source).indexOf(x) > -1
+const contains = x => str => String(str).indexOf(x) > -1
 
 const icontains = x => {
     x = String(x).toLowerCase()
-    return source =>
-        String(source)
-            .toLowerCase()
-            .indexOf(x) > -1
+    return str => String(str)
+        .toLowerCase()
+        .indexOf(x) > -1
 }
 
 // Data Operators
