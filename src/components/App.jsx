@@ -1,8 +1,7 @@
 import React from 'react'
 import table from '../unicode/lookup-table/aglfn'
 import { bind } from '../.utils/react-utils'
-import filterTable from '../.utils/filter-table'
-import isUnicode from '../.utils/is-unicode'
+import { or, object } from '../.utils/predicates'
 
 import Glyph from './Glyph'
 import bem from './bem'
@@ -10,51 +9,30 @@ import bem from './bem'
 class App extends React.Component {
     constructor(props) {
         super(props)
-        bind(this, [
-            'handleSearch'
-        ])
+        bind(this, ['handleSearch'])
         this.state = {
-            glyphs: []
+            glyphs: table.glyphs
         }
-    }
-
-    componentWillMount() {
-        this.setState({
-            glyphs: filterTable(table.glyphs)
-        })
     }
 
     handleSearch({ target }) {
-        let { value } = target, spec
-
-        if (isUnicode(value)) {
-            spec = {
-                value
-            }
-        } else {
-            spec = {
-                name: value
-            }
-        }
+        let { value } = target
         this.setState({
-            glyphs: filterTable(
-                table.glyphs,
-                spec
-            )
+            glyphs: table.glyphs.filter(or(
+                object.icontains('value', value),
+                object.icontains('name', value)
+            ))
         })
     }
 
     render() {
         return (
             <div>
-                <input
-                    className={bem('search')}
-                    onChange={this.handleSearch}
-                />
+                <input className={bem('search')} onChange={this.handleSearch} />
                 <div className={bem('container')}>
-                    {this.state.glyphs.map((data, index) =>
+                    {this.state.glyphs.map((data, index) => (
                         <Glyph key={index} data={data} />
-                    )}
+                    ))}
                 </div>
             </div>
         )

@@ -1,4 +1,4 @@
-import makeBem from '../.utils/make-bem.min';
-import style from './style.css';
+import makeBem from '../.utils/make-bem.min'
+import style from './style.css'
 
-export default makeBem(style);
+export default makeBem(style)

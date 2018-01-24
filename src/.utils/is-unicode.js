@@ -15,7 +15,7 @@ function isUnicode(value) {
             score += step
         }
     }
-    return score > .5
+    return score > 0.5
 }
 
 export default isUnicode
