@@ -1,5 +1,6 @@
 /* based on https://codepen.io/Universalist/post/predicates-in-javascript
- * need more? https://github.com/landau/predicate
+ * motivation: convenient queries (predicates) system for filtering object literal dataset
+ * alternative: https://github.com/landau/predicate
  */
 
 // Logical Operators
