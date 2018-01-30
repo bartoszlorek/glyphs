@@ -1,39 +1,62 @@
 import React from 'react'
-import table from '../unicode/lookup-table/aglfn'
 import { bind } from '../.utils/react-utils'
-import { or, object } from '../.utils/predicates'
+import { and, or, object } from '../.utils/predicates'
+import { glyphs } from '../unicode/lookup-table/aglfn'
 
-import Glyph from './Glyph'
+import Container from './Container'
+import Select from './Select'
 import bem from './bem'
+
+import groupOptions from './group-options'
+import groupContains from './group-contains'
 
 class App extends React.Component {
     constructor(props) {
         super(props)
-        bind(this, ['handleSearch'])
+        bind(this, ['handleSearch', 'handleSelect'])
+
         this.state = {
-            glyphs: table.glyphs
+            searchValue: '',
+            selectGroup: []
         }
     }
 
     handleSearch({ target }) {
-        let { value } = target
         this.setState({
-            glyphs: table.glyphs.filter(or(
-                object.icontains('value', value),
-                object.icontains('name', value)
-            ))
+            searchValue: target.value
+        })
+    }
+
+    handleSelect(selection) {
+        this.setState({
+            selectGroup: selection
         })
     }
 
     render() {
+        const { selectGroup, searchValue } = this.state
+        const visibleGlyphs = glyphs.filter(
+            and(
+                or(
+                    object.icontains('value', searchValue),
+                    object.icontains('name', searchValue)
+                ),
+                or(
+                    groupContains('category', selectGroup),
+                    groupContains('block', selectGroup)
+                )
+            )
+        )
+
         return (
             <div>
                 <input className={bem('search')} onChange={this.handleSearch} />
-                <div className={bem('container')}>
-                    {this.state.glyphs.map((data, index) => (
-                        <Glyph key={index} data={data} />
-                    ))}
-                </div>
+                <Select
+                    value={selectGroup}
+                    options={groupOptions}
+                    onChange={this.handleSelect}
+                />
+                <Container glyphs={visibleGlyphs} />
             </div>
         )
     }
