@@ -3,6 +3,7 @@ const validMessageType = type => {
         throw 'message requires `type` as a String'
     }
 }
+
 const validTabId = id => {
     if (typeof id !== 'number') {
         throw 'tab requires `id` as a Number'
