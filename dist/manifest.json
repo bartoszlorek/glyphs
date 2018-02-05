@@ -1,0 +1,31 @@
+{
+    "manifest_version": 2,
+    "name": "Glyphs",
+    "short_name": "Glyphs",
+    "version": "1.0.0",
+    "author": "Bartosz Lorek",
+    "description": "",
+    "homepage_url": "http://www.bartoszlorek.pl/",
+    "permissions": [
+        "activeTab"
+    ],
+    "content_scripts": [{
+        "matches": [
+            "http://*/*",
+            "https://*/*"
+        ],
+        "js": ["content-script.js"],
+        "all_frames": false
+    }],
+    "icons": {
+        "16": "assets/icon16.png",
+        "19": "assets/icon19.png",
+        "38": "assets/icon38.png",
+        "48": "assets/icon48.png",
+        "128": "assets/icon128.png"
+    },
+    "browser_action": {
+        "default_icon": "assets/icon16.png",
+        "default_popup": "popup.html"
+    }
+}

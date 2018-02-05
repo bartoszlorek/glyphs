@@ -2,7 +2,8 @@ var path = require('path')
 
 module.exports = {
     entry: {
-        popup: './src/popup.js'
+        'content-script': './src/content-script.js',
+        'popup': './src/popup.js'
     },
     output: {
         path: path.join(__dirname, 'dist'),
