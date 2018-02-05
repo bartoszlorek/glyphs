@@ -17,6 +17,8 @@ body {
 .container {
     flex-wrap: wrap;
     border-width: 1px 0 0 1px;
+    overflow: auto;
+    height: 350px;
 }
 
 .glyph {
@@ -36,7 +38,7 @@ body {
 }
 
 .symbol {
-    font-size: 7vw;
+    font-size: 2em;
     line-height: 1em;
     background: #f2f2f2;
 }

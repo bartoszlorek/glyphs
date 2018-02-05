@@ -1,5 +1,5 @@
 import React from 'react'
 import { render } from 'react-dom'
-import App from './components/App'
+import Popup from './popup/index'
 
-render(<App />, document.getElementById('app'))
+render(<Popup />, document.getElementById('app'))

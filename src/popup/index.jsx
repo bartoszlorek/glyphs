@@ -2,18 +2,19 @@ import React from 'react'
 import { bind } from '../.utils/react-utils'
 import { and, or, object } from '../.utils/predicates'
 import { glyphs } from '../unicode/lookup-table/aglfn'
+import message from '../.utils/chrome/message'
 
-import Container from './Container'
-import Select from './Select'
+import Container from './components/Container'
+import Select from './components/Select'
 import bem from './bem'
 
 import groupOptions from './group-options'
 import groupContains from './group-contains'
 
-class App extends React.Component {
+class Popup extends React.Component {
     constructor(props) {
         super(props)
-        bind(this, ['handleSearch', 'handleSelect'])
+        bind(this, ['handleSearch', 'handleSelect', 'handleClick'])
 
         this.state = {
             searchValue: '',
@@ -31,6 +32,10 @@ class App extends React.Component {
         this.setState({
             selectGroup: selection
         })
+    }
+
+    handleClick(glyph) {
+        message.toTab.current({ type: 'ADD_GLYPH', glyph })
     }
 
     render() {
@@ -56,10 +61,10 @@ class App extends React.Component {
                     options={groupOptions}
                     onChange={this.handleSelect}
                 />
-                <Container glyphs={visibleGlyphs} />
+                <Container glyphs={visibleGlyphs} onClick={this.handleClick} />
             </div>
         )
     }
 }
 
-export default App
+export default Popup
