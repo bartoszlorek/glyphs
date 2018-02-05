@@ -1,19 +1,18 @@
 function spliceString(string, start, end, replacement) {
-    let length = string == null ? 0 : string.length
-    if (!length) {
+    if (typeof string !== 'string') {
         return ''
     }
     if (replacement === undefined && typeof end === 'function') {
         replacement = end
         end = length
     }
-    start = index(start, length, 0)
-    end = index(end, length, length)
+    start = index(start, string.length, 0)
+    end = index(end, string.length, string.length)
 
     if (start > end) {
         end = [start, (start = end)][0]
     }
-    if (start >= length) {
+    if (start > string.length) {
         return string
     }
     if (typeof replacement === 'function') {
