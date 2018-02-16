@@ -11,11 +11,12 @@ import Container from './components/Container'
 
 import groupOptions from './group-options'
 import groupContains from './group-contains'
+import applyGlyph from './apply-glyph'
 
 class Popup extends React.Component {
     constructor(props) {
         super(props)
-        bind(this, ['handleSearch', 'handleSelect', 'handleClick'])
+        bind(this, ['handleSearch', 'handleSelect'])
 
         this.state = {
             frameVisibility: true,
@@ -44,10 +45,6 @@ class Popup extends React.Component {
         })
     }
 
-    handleClick(glyph) {
-        console.log(glyph)
-    }
-
     render() {
         const { selectGroup, searchValue, frameVisibility } = this.state
         const visibleGlyphs = glyphs.filter(
@@ -71,7 +68,7 @@ class Popup extends React.Component {
                     options={groupOptions}
                     onChange={this.handleSelect}
                 />
-                <Container glyphs={visibleGlyphs} onClick={this.handleClick} />
+                <Container glyphs={visibleGlyphs} onClick={applyGlyph} />
             </Frame>
         )
     }

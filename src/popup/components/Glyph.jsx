@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Symbol = styled.span`
-    background: #f2f2f2;
     font-size: 2em;
     line-height: 1em;
 `
@@ -11,6 +10,8 @@ const Value = styled.span`
     display: none;
 `
 
+const preventMouseDown = e => e.preventDefault()
+
 function Glyph({ data, className, onClick }) {
     let { value, name, symbol } = data
 
@@ -18,7 +19,11 @@ function Glyph({ data, className, onClick }) {
         <div
             data-name={name}
             className={className}
-            onClick={() => onClick(data)}
+            onClick={e => {
+                e.preventDefault()
+                onClick(data)
+            }}
+            onMouseDown={preventMouseDown}
         >
             <Symbol>{symbol}</Symbol>
             <Value>{value}</Value>
@@ -35,11 +40,20 @@ export default styled(Glyph)`
     align-items: center;
     display: flex;
     overflow: hidden;
+    cursor: pointer;
 
     &::before {
         content: '';
         display: block;
         padding-top: 100%;
         height: 0;
+    }
+
+    &:hover {
+        background: #ebebeb;
+    }
+
+    &:active {
+        background: #fff;
     }
 `
