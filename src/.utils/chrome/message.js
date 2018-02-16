@@ -28,6 +28,10 @@ const sendToFront = (id, spec, callback) => {
 const message = {
     on: (type, callback) => {
         validMessageType(type)
+        if (chrome.runtime.onMessage === undefined) {
+            console.log('Cannot add listener to `chrome.runtime.onMessage`.')
+            return
+        }
         chrome.runtime.onMessage.addListener((request, sender, response) => {
             if (request.type === type) {
                 callback(request, sender, response)
