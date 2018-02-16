@@ -1,9 +1,9 @@
 import React from 'react'
-import bem from '../bem'
+import styled from 'styled-components'
 
 import Glyph from './Glyph'
 
-function Container({ glyphs, onClick }) {
+function Container({ glyphs, className, onClick }) {
     let result
 
     if (glyphs.length > 0) {
@@ -14,7 +14,17 @@ function Container({ glyphs, onClick }) {
         result = <span>{'no results'}</span>
     }
 
-    return <div className={bem('container')}>{result}</div>
+    return <div className={className}>{result}</div>
 }
 
-export default Container
+export default styled(Container)`
+    border: 1px solid #dadada;
+    border-width: 1px 0 0 1px;
+    flex-wrap: wrap;
+    overflow: auto;
+    display: flex;
+
+    & * {
+        box-sizing: border-box;
+    }
+`

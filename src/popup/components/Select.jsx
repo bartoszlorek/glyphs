@@ -1,8 +1,7 @@
 import React from 'react'
 import SelectPlus from 'react-select-plus'
-import bem from '../bem'
 
-import 'react-select-plus/dist/react-select-plus.css'
+import './react-select-plus.css'
 
 function Select({ value, options, onChange }) {
     return (

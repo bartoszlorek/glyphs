@@ -4,9 +4,10 @@ import { and, or, object } from '../.utils/predicates'
 import { glyphs } from '../unicode/lookup-table/aglfn'
 import message from '../.utils/chrome/message'
 
-import Container from './components/Container'
+import Frame from './components/Frame'
+import Search from './components/Search'
 import Select from './components/Select'
-import bem from './bem'
+import Container from './components/Container'
 
 import groupOptions from './group-options'
 import groupContains from './group-contains'
@@ -17,9 +18,18 @@ class Popup extends React.Component {
         bind(this, ['handleSearch', 'handleSelect', 'handleClick'])
 
         this.state = {
+            frameVisibility: true,
             searchValue: '',
             selectGroup: []
         }
+    }
+
+    componentDidMount() {
+        message.on('BROWSER_ACTION', () => {
+            this.setState(prevState => ({
+                frameVisibility: !prevState.frameVisibility
+            }))
+        })
     }
 
     handleSearch({ target }) {
@@ -35,11 +45,11 @@ class Popup extends React.Component {
     }
 
     handleClick(glyph) {
-        message.toTab.current({ type: 'ADD_GLYPH', glyph })
+        console.log(glyph)
     }
 
     render() {
-        const { selectGroup, searchValue } = this.state
+        const { selectGroup, searchValue, frameVisibility } = this.state
         const visibleGlyphs = glyphs.filter(
             and(
                 or(
@@ -54,15 +64,15 @@ class Popup extends React.Component {
         )
 
         return (
-            <div>
-                <input className={bem('search')} onChange={this.handleSearch} />
+            <Frame isVisible={frameVisibility}>
+                <Search onChange={this.handleSearch} />
                 <Select
                     value={selectGroup}
                     options={groupOptions}
                     onChange={this.handleSelect}
                 />
                 <Container glyphs={visibleGlyphs} onClick={this.handleClick} />
-            </div>
+            </Frame>
         )
     }
 }

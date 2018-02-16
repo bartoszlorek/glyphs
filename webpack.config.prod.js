@@ -1,11 +1,10 @@
 var webpack = require('webpack')
 var path = require('path')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
     entry: {
-        'content-script': './src/content-script.js',
-        'popup': './src/popup.js'
+        background: './src/background.js',
+        popup: './src/popup.js'
     },
     output: {
         path: path.join(__dirname, 'dist'),
@@ -23,17 +22,8 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                include: /src/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use:
-                        'css-loader?modules=true&localIdentName=[hash:base64:5]'
-                })
-            },
-            {
-                test: /\.css$/,
                 loader: 'style-loader!css-loader',
-                include: /node_modules/
+                include: /src/
             }
         ]
     },
@@ -54,10 +44,6 @@ module.exports = {
             'process.env': {
                 NODE_ENV: '"production"'
             }
-        }),
-        new ExtractTextPlugin({
-            filename: 'style.css',
-            allChunks: true
         })
     ]
 }

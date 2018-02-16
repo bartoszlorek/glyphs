@@ -2,8 +2,8 @@ var path = require('path')
 
 module.exports = {
     entry: {
-        'content-script': './src/content-script.js',
-        'popup': './src/popup.js'
+        background: './src/background.js',
+        popup: './src/popup.js'
     },
     output: {
         path: path.join(__dirname, 'dist'),
@@ -21,22 +21,8 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                loader: 'style-loader',
-                include: /src/
-            },
-            {
-                test: /\.css$/,
-                loader: 'css-loader',
-                include: /src/,
-                query: {
-                    modules: true,
-                    localIdentName: '[name]-[local]--[hash:base64:5]'
-                }
-            },
-            {
-                test: /\.css$/,
                 loader: 'style-loader!css-loader',
-                include: /node_modules/
+                include: /src/
             }
         ]
     }
