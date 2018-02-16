@@ -1,7 +1,7 @@
 const path = require('path')
 const unicodeRange = require('unicode-range')
 const fileParser = require('../.utils/file-parser')
-const escSymbol = require('../.utils/esc-symbol')
+const escSymbol = require('./.internal/esc-symbol')
 const getIndex = require('./.internal/get-index')
 
 const unidata = require('./lookup-table/unidata')
