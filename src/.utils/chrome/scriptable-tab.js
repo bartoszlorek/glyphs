@@ -1,31 +1,33 @@
+const VOID = { code: 'void(0)' }
+
 function scriptableTab() {
-    const cache = {};
-    return (tab) => {
-        let tabId = tab == null ? -1 : tab.id;
-        if (tabId < 0) {
-            return Promise.reject('This tab cannot be scripted.');
+    const state = {}
+
+    return tabId => {
+        if (typeof tabId !== 'number') {
+            return Promise.reject('Incorrect tab ID.')
         }
-        let error = cache[tabId];
-        if (error !== undefined) {
-            return error === false
+        let tabState = state[tabId]
+        if (tabState !== undefined) {
+            return tabState === true
                 ? Promise.resolve(tabId)
-                : Promise.reject(error);
+                : Promise.reject(tabState)
         }
-        return new Promise((resolve, reject) => {
-            chrome.tabs.executeScript(tabId, {
-                code: 'void(0)'
-            }, () => {
-                let { lastError } = chrome.runtime;
+
+        return new Promise((resolve, reject) =>
+            chrome.tabs.executeScript(tabId, VOID, () => {
+                let { lastError } = chrome.runtime
+
                 if (lastError) {
-                    cache[tabId] = lastError.message;
-                    reject(lastError.message);
+                    state[tabId] = lastError.message
+                    reject(lastError.message)
                 } else {
-                    cache[tabId] = false;
-                    resolve(tabId);
+                    state[tabId] = true
+                    resolve(tabId)
                 }
             })
-        })
+        )
     }
 }
 
-export default scriptableTab;
+export default scriptableTab
