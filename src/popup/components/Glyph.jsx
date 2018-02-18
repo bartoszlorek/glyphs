@@ -42,6 +42,14 @@ export default styled(Glyph)`
     overflow: hidden;
     cursor: pointer;
 
+    &:nth-child(-n + 10) {
+        border-top-width: 1px;
+    }
+
+    &:nth-child(10n + 1) {
+        border-left-width: 1px;
+    }
+
     &::before {
         content: '';
         display: block;

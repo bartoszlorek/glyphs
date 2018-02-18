@@ -9,20 +9,25 @@ function Frame({ className, children, isVisible }) {
 }
 
 export default styled(Frame)`
+    z-index: 2147483644;
     position: fixed;
-    overflow-y: scroll;
     top: 0;
     right: 0;
+    left: auto;
+    bottom: auto;
     width: 400px;
     height: 450px;
-    padding: 10px;
     margin: 10px;
+
+    display: flex;
+    flex-direction: column;
+
     background: #fff;
-    border: 1px solid #b8b8b8;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
-    z-index: 2147483644;
-    font-size: 14px;
+    border: 1px solid #b8b8b8;
+
     color: #333;
+    font-size: 14px;
     font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', Helvetica,
         Arial, sans-serif, 'Segoe UI Symbol';
 `

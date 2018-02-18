@@ -18,8 +18,6 @@ function Container({ glyphs, className, onClick }) {
 }
 
 export default styled(Container)`
-    border: 1px solid #dadada;
-    border-width: 1px 0 0 1px;
     flex-wrap: wrap;
     overflow: auto;
     display: flex;

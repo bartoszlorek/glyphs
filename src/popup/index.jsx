@@ -5,6 +5,8 @@ import { glyphs } from '../unicode/lookup-table/aglfn'
 import message from '../.utils/chrome/message'
 
 import Frame from './components/Frame'
+import Header from './components/Header'
+import Body from './components/Body'
 import Search from './components/Search'
 import Select from './components/Select'
 import Container from './components/Container'
@@ -62,13 +64,17 @@ class Popup extends React.Component {
 
         return (
             <Frame isVisible={frameVisibility}>
-                <Search onChange={this.handleSearch} />
-                <Select
-                    value={selectGroup}
-                    options={groupOptions}
-                    onChange={this.handleSelect}
-                />
-                <Container glyphs={visibleGlyphs} onClick={applyGlyph} />
+                <Header>
+                    <Search onChange={this.handleSearch} />
+                    <Select
+                        value={selectGroup}
+                        options={groupOptions}
+                        onChange={this.handleSelect}
+                    />
+                </Header>
+                <Body>
+                    <Container glyphs={visibleGlyphs} onClick={applyGlyph} />
+                </Body>
             </Frame>
         )
     }
