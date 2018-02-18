@@ -3,26 +3,31 @@ import {
     rangeContent,
     nodeValue,
     isEditable,
-    isTextElement
+    isTextElement,
+    setNodeValue
 } from '../.utils/selection.min.js'
 
 import spliceString from '../.utils/splice-string'
 import dispatchEvent from './dispatch-event'
+import setCaret from './set-caret'
 
 const isEditableText = e => isTextElement(e) || isEditable(e)
 
 const addValue = (element, value) => {
     let { node, text, startOffset, endOffset } = element
-    nodeValue(node, spliceString(text, startOffset, endOffset, value))
+    setNodeValue(node, spliceString(text, startOffset, endOffset, value))
 }
 
 function applyGlyph(glyph) {
     let range = selectionRange()
     if (range !== null && isEditableText(range.commonAncestorContainer)) {
         rangeContent(range).forEach((element, index) => {
-            let value = index === 0 ? glyph.symbol : ''
+            let { node, endOffset } = element,
+                value = index === 0 ? glyph.symbol : ''
+
             addValue(element, value)
-            dispatchEvent(element.node)
+            setCaret(node, endOffset + 1)
+            dispatchEvent(node)
         })
     }
 }
