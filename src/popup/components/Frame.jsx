@@ -1,11 +1,23 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Motion, spring } from 'react-motion'
 
 function Frame({ className, children, isVisible }) {
     if (isVisible === false) {
         return null
     }
-    return <div className={className}>{children}</div>
+    return (
+        <Motion
+            defaultStyle={{ opacity: 0 }}
+            style={{ opacity: spring(1, { stiffness: 400, damping: 40 }) }}
+        >
+            {style => (
+                <div className={className} style={style}>
+                    {children}
+                </div>
+            )}
+        </Motion>
+    )
 }
 
 export default styled(Frame)`
