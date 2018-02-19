@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 export default styled.input.attrs({
+    defaultValue: props => props.defaultValue,
     type: 'search'
 })`
     width: 100%;

@@ -23,7 +23,8 @@ class Popup extends React.Component {
         this.state = {
             frameVisibility: true,
             searchValue: '',
-            selectGroup: []
+            selectGroup: [],
+            glyphs: glyphs.slice(0, 100)
         }
     }
 
@@ -33,6 +34,9 @@ class Popup extends React.Component {
                 frameVisibility: !prevState.frameVisibility
             }))
         })
+
+        // for better performance
+        setTimeout(() => this.setState({ glyphs }), 500)
     }
 
     handleSearch({ target }) {
@@ -49,7 +53,7 @@ class Popup extends React.Component {
 
     render() {
         const { selectGroup, searchValue, frameVisibility } = this.state
-        const visibleGlyphs = glyphs.filter(
+        const visibleGlyphs = this.state.glyphs.filter(
             and(
                 or(
                     object.icontains('value', searchValue),
@@ -65,7 +69,10 @@ class Popup extends React.Component {
         return (
             <Frame isVisible={frameVisibility}>
                 <Header>
-                    <Search onChange={this.handleSearch} />
+                    <Search
+                        defaultValue={searchValue}
+                        onChange={this.handleSearch}
+                    />
                     <Select
                         value={selectGroup}
                         options={groupOptions}
