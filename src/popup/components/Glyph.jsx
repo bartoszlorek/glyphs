@@ -6,11 +6,8 @@ const Symbol = styled.span`
     line-height: 1em;
 `
 
-const Value = styled.span`
-    display: none;
-`
-
 const handleMouseDown = e => e.preventDefault()
+const printData = data => `U+${data.value} | ${data.name}`
 
 class Glyph extends React.PureComponent {
     constructor(props) {
@@ -19,18 +16,21 @@ class Glyph extends React.PureComponent {
             e.preventDefault()
             props.onClick(props.data)
         }
+        this.handleMouseEnter = () => {
+            props.onHover(printData(props.data))
+        }
     }
 
     render() {
-        let { className, data, onClick } = this.props
+        let { className, data } = this.props
         return (
             <div
                 className={className}
-                onMouseDown={handleMouseDown}
                 onClick={this.handleClick}
+                onMouseDown={handleMouseDown}
+                onMouseEnter={this.handleMouseEnter}
             >
                 <Symbol>{data.symbol}</Symbol>
-                <Value>{data.value}</Value>
             </div>
         )
     }
@@ -50,23 +50,19 @@ export default styled(Glyph)`
     &:nth-child(-n + 10) {
         border-top-width: 1px;
     }
-
     &:nth-child(10n + 1) {
         border-left-width: 1px;
     }
-
     &::before {
         content: '';
         display: block;
         padding-top: 100%;
         height: 0;
     }
-
     &:hover {
-        background: #ebebeb;
+        background: #e6e6e6;
     }
-
     &:active {
-        background: #fff;
+        background: transparent;
     }
 `

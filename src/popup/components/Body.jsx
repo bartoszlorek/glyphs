@@ -10,4 +10,5 @@ export default styled(Body)`
     overflow-y: scroll;
     height: 100%;
     padding: 10px;
+    background: #fafafa;
 `

@@ -6,6 +6,7 @@ import message from '../.utils/chrome/message'
 
 import Frame from './components/Frame'
 import Header from './components/Header'
+import Footer from './components/Footer'
 import Body from './components/Body'
 import Overlay from './components/Overlay'
 import Search from './components/Search'
@@ -23,22 +24,24 @@ class Popup extends React.Component {
             'handleSearch',
             'handleSelect',
             'handleOpenSelect',
-            'handleCloseSelect'
+            'handleCloseSelect',
+            'handleHover'
         ])
 
         this.state = {
-            frameVisibility: true,
-            isOpenSelect: false,
             glyphs: glyphs.slice(0, 100),
+            visibility: true,
+            isOpenSelect: false,
             searchValue: '',
-            selectGroup: []
+            selectGroup: [],
+            hoverValue: ''
         }
     }
 
     componentDidMount() {
         message.on('BROWSER_ACTION', () => {
             this.setState(prevState => ({
-                frameVisibility: !prevState.frameVisibility
+                visibility: !prevState.visibility
             }))
         })
 
@@ -70,8 +73,17 @@ class Popup extends React.Component {
         })
     }
 
+    handleHover(value = '') {
+        this.setState({
+            hoverValue: value
+        })
+    }
+
     render() {
-        const { selectGroup, searchValue, frameVisibility } = this.state
+        if (this.state.visibility === false) {
+            return null
+        }
+        const { selectGroup, searchValue } = this.state
         const visibleGlyphs = this.state.glyphs.filter(
             and(
                 or(
@@ -84,9 +96,8 @@ class Popup extends React.Component {
                 )
             )
         )
-
         return (
-            <Frame title={'Glyphs'} isVisible={frameVisibility}>
+            <Frame title={'Glyphs'}>
                 <Header>
                     <Search
                         defaultValue={searchValue}
@@ -101,8 +112,13 @@ class Popup extends React.Component {
                     />
                 </Header>
                 <Body>
-                    <Container glyphs={visibleGlyphs} onClick={applyGlyph} />
+                    <Container
+                        glyphs={visibleGlyphs}
+                        onClick={applyGlyph}
+                        onHover={this.handleHover}
+                    />
                 </Body>
+                <Footer value={this.state.hoverValue} />
                 <Overlay isVisible={this.state.isOpenSelect} />
             </Frame>
         )
