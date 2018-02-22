@@ -1,3 +1,8 @@
+import closest from '../.utils/closest'
+import setCaret from '../.utils/set-caret'
+import spliceString from '../.utils/splice-string'
+import dispatchEvent from './dispatch-event'
+
 import {
     selectionRange,
     rangeContent,
@@ -6,11 +11,6 @@ import {
     isTextElement,
     setNodeValue
 } from '../.utils/selection.min.js'
-
-import closest from '../.utils/closest'
-import spliceString from '../.utils/splice-string'
-import dispatchEvent from './dispatch-event'
-import setCaret from './set-caret'
 
 const isEditableText = e => isTextElement(e) || isEditable(e)
 const isGlyphsFrame = closest(e => e.id === 'glyphs-frame')
@@ -23,7 +23,6 @@ const addValue = (element, value) => {
 function applyGlyph(glyph) {
     let range = selectionRange(),
         ancestor = range.commonAncestorContainer
-
     if (
         range !== null &&
         !isGlyphsFrame(ancestor) &&
