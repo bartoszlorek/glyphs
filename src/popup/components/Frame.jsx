@@ -1,36 +1,47 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Motion, spring } from 'react-motion'
+import Draggabilly from 'draggabilly'
 
 const titleSlug = str => str.replace(' ', '-').toLowerCase() + '-frame'
 
-function Frame({ className, children, title, isVisible }) {
-    if (isVisible === false) {
-        return null
+const Handler = styled.div`
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-weight: 500;
+    cursor: move;
+`
+
+class Frame extends React.Component {
+    componentDidMount() {
+        this.draggable = new Draggabilly(this.refs.frameElement, {
+            handle: '.frame-handler'
+        })
     }
-    return (
-        <Motion
-            defaultStyle={{ opacity: 0 }}
-            style={{ opacity: spring(1, { stiffness: 400, damping: 40 }) }}
-        >
-            {style => (
-                <div id={titleSlug(title)} className={className} style={style}>
-                    {children}
-                </div>
-            )}
-        </Motion>
-    )
+
+    componentWillUnmount() {
+        this.draggable.destroy()
+    }
+
+    render() {
+        let { className, children, title } = this.props
+        return (
+            <div id={titleSlug(title)} className={className} ref="frameElement">
+                <Handler className="frame-handler">{title}</Handler>
+                {children}
+            </div>
+        )
+    }
 }
 
 Frame.propTypes = {
-    title: PropTypes.string,
-    isVisible: PropTypes.bool
+    title: PropTypes.string
 }
 
 Frame.defaultProps = {
-    title: '',
-    isVisible: true
+    title: ''
 }
 
 export default styled(Frame)`
