@@ -13,7 +13,7 @@ import dispatchEvent from './dispatch-event'
 import setCaret from './set-caret'
 
 const isEditableText = e => isTextElement(e) || isEditable(e)
-const isGlyphsFrame = closest(e => e && e.id === 'glyphs-frame')
+const isGlyphsFrame = closest(e => e.id === 'glyphs-frame')
 
 const addValue = (element, value) => {
     let { node, text, startOffset, endOffset } = element
