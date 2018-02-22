@@ -10,25 +10,30 @@ const Value = styled.span`
     display: none;
 `
 
-const preventMouseDown = e => e.preventDefault()
+const handleMouseDown = e => e.preventDefault()
 
-function Glyph({ data, className, onClick }) {
-    let { value, name, symbol } = data
+class Glyph extends React.PureComponent {
+    constructor(props) {
+        super(props)
+        this.handleClick = e => {
+            e.preventDefault()
+            props.onClick(props.data)
+        }
+    }
 
-    return (
-        <div
-            data-name={name}
-            className={className}
-            onClick={e => {
-                e.preventDefault()
-                onClick(data)
-            }}
-            onMouseDown={preventMouseDown}
-        >
-            <Symbol>{symbol}</Symbol>
-            <Value>{value}</Value>
-        </div>
-    )
+    render() {
+        let { className, data, onClick } = this.props
+        return (
+            <div
+                className={className}
+                onMouseDown={handleMouseDown}
+                onClick={this.handleClick}
+            >
+                <Symbol>{data.symbol}</Symbol>
+                <Value>{data.value}</Value>
+            </div>
+        )
+    }
 }
 
 export default styled(Glyph)`

@@ -47,19 +47,27 @@ class Popup extends React.Component {
     }
 
     handleSearch({ target }) {
-        this.setState({ searchValue: target.value })
+        this.setState({
+            searchValue: target.value
+        })
     }
 
     handleSelect(selection) {
-        this.setState({ selectGroup: selection })
+        this.setState({
+            selectGroup: selection
+        })
     }
 
     handleOpenSelect() {
-        this.setState({ isOpenSelect: true })
+        this.setState({
+            isOpenSelect: true
+        })
     }
 
     handleCloseSelect() {
-        this.setState({ isOpenSelect: false })
+        this.setState({
+            isOpenSelect: false
+        })
     }
 
     render() {
