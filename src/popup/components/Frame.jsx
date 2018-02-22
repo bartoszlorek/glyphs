@@ -1,8 +1,11 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Motion, spring } from 'react-motion'
 
-function Frame({ className, children, isVisible }) {
+const titleSlug = str => str.replace(' ', '-').toLowerCase() + '-frame'
+
+function Frame({ className, children, title, isVisible }) {
     if (isVisible === false) {
         return null
     }
@@ -12,12 +15,22 @@ function Frame({ className, children, isVisible }) {
             style={{ opacity: spring(1, { stiffness: 400, damping: 40 }) }}
         >
             {style => (
-                <div className={className} style={style}>
+                <div id={titleSlug(title)} className={className} style={style}>
                     {children}
                 </div>
             )}
         </Motion>
     )
+}
+
+Frame.propTypes = {
+    title: PropTypes.string,
+    isVisible: PropTypes.bool
+}
+
+Frame.defaultProps = {
+    title: '',
+    isVisible: true
 }
 
 export default styled(Frame)`

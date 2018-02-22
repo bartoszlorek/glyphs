@@ -10,4 +10,5 @@ export default styled(Header)`
     background: #fff;
     box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.08);
     border-bottom: 1px solid #dadada;
+    z-index: 9999;
 `

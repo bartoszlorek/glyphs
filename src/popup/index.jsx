@@ -7,6 +7,7 @@ import message from '../.utils/chrome/message'
 import Frame from './components/Frame'
 import Header from './components/Header'
 import Body from './components/Body'
+import Overlay from './components/Overlay'
 import Search from './components/Search'
 import Select from './components/Select'
 import Container from './components/Container'
@@ -18,13 +19,19 @@ import applyGlyph from './apply-glyph'
 class Popup extends React.Component {
     constructor(props) {
         super(props)
-        bind(this, ['handleSearch', 'handleSelect'])
+        bind(this, [
+            'handleSearch',
+            'handleSelect',
+            'handleOpenSelect',
+            'handleCloseSelect'
+        ])
 
         this.state = {
             frameVisibility: true,
+            isOpenSelect: false,
+            glyphs: glyphs.slice(0, 100),
             searchValue: '',
-            selectGroup: [],
-            glyphs: glyphs.slice(0, 100)
+            selectGroup: []
         }
     }
 
@@ -40,15 +47,19 @@ class Popup extends React.Component {
     }
 
     handleSearch({ target }) {
-        this.setState({
-            searchValue: target.value
-        })
+        this.setState({ searchValue: target.value })
     }
 
     handleSelect(selection) {
-        this.setState({
-            selectGroup: selection
-        })
+        this.setState({ selectGroup: selection })
+    }
+
+    handleOpenSelect() {
+        this.setState({ isOpenSelect: true })
+    }
+
+    handleCloseSelect() {
+        this.setState({ isOpenSelect: false })
     }
 
     render() {
@@ -67,7 +78,7 @@ class Popup extends React.Component {
         )
 
         return (
-            <Frame isVisible={frameVisibility}>
+            <Frame title={'Glyphs'} isVisible={frameVisibility}>
                 <Header>
                     <Search
                         defaultValue={searchValue}
@@ -77,11 +88,14 @@ class Popup extends React.Component {
                         value={selectGroup}
                         options={groupOptions}
                         onChange={this.handleSelect}
+                        onOpen={this.handleOpenSelect}
+                        onClose={this.handleCloseSelect}
                     />
                 </Header>
                 <Body>
                     <Container glyphs={visibleGlyphs} onClick={applyGlyph} />
                 </Body>
+                <Overlay isVisible={this.state.isOpenSelect} />
             </Frame>
         )
     }

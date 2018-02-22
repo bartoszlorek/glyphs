@@ -6,7 +6,8 @@ function Body({ className, children }) {
 }
 
 export default styled(Body)`
+    position: relative;
+    overflow-y: scroll;
     height: 100%;
     padding: 10px;
-    overflow-y: scroll;
 `

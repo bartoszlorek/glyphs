@@ -1,4 +1,8 @@
 {
     "presets": ["es2015", "react"],
-    "plugins": ["lodash", "babel-plugin-styled-components"]
+    "plugins": [
+        ["reflective-bind/babel", { "log": "debug" }],
+        "lodash",
+        "babel-plugin-styled-components"
+    ]
 }
