@@ -1,5 +1,5 @@
-var webpack = require('webpack')
-var path = require('path')
+const webpack = require('webpack')
+const path = require('path')
 
 module.exports = {
     entry: {
@@ -24,6 +24,11 @@ module.exports = {
                 test: /\.css$/,
                 loader: 'style-loader!css-loader',
                 include: /src/
+            },
+            {
+                test: /\.less$/,
+                include: /src/,
+                loader: 'style-loader!css-loader!less-loader'
             }
         ]
     },

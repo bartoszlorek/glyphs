@@ -6,8 +6,8 @@ export default styled.input.attrs({
     type: 'search'
 })`
     width: 100%;
-    padding: 0.65em;
-    margin: 0 0 8px;
+    padding: 0.5em;
+    margin: 0 0 5px;
     box-sizing: border-box;
     border: 1px solid #ddd;
     background: #fafafa;

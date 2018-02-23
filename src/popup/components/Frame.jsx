@@ -11,6 +11,7 @@ const Handler = styled.div`
     padding: 10px;
     box-sizing: border-box;
     font-weight: 500;
+    line-height: 1;
     cursor: move;
 `
 
