@@ -21,12 +21,11 @@ const addValue = (element, value) => {
 }
 
 function applyGlyph(glyph) {
-    let range = selectionRange(),
-        ancestor = range.commonAncestorContainer
+    let range = selectionRange()
     if (
         range !== null &&
-        !isGlyphsFrame(ancestor) &&
-        isEditableText(ancestor)
+        !isGlyphsFrame(range.commonAncestorContainer) &&
+        isEditableText(range.commonAncestorContainer)
     ) {
         rangeContent(range).forEach((element, index) => {
             let { node, endOffset } = element,
@@ -36,7 +35,9 @@ function applyGlyph(glyph) {
             setCaret(node, endOffset + 1)
             dispatchEvent(node)
         })
+        return true
     }
+    return false
 }
 
 export default applyGlyph

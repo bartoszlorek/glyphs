@@ -53,7 +53,7 @@ export default styled(Frame)`
     left: auto;
     bottom: auto;
     width: 400px;
-    height: 450px;
+    height: 500px;
     margin: 10px;
 
     display: flex;

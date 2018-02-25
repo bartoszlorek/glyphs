@@ -1,9 +1,13 @@
-function groupContains(name, selection) {
-    if (selection.length === 0) {
+function groupContains(name, selectedGroups) {
+    if (selectedGroups.length === 0) {
         return () => true
     }
-    const current = selection.filter(a => a.group.name === name)
-    return obj => current.some(a => a.index === obj[name])
+    const currentGroups = selectedGroups.filter(
+        item => item.group.name === name
+    )
+    return glyph => currentGroups.some(
+        group => group.index === glyph[name]
+    )
 }
 
 export default groupContains

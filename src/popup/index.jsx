@@ -3,6 +3,7 @@ import { bind } from '../.utils/react-utils'
 import { and, or, object } from '../.utils/predicates'
 import { glyphs } from '../unicode/lookup-table/aglfn'
 import message from '../.utils/chrome/message'
+import isEqualArray from '../.utils/is-equal-array'
 
 import Frame from './components/Frame'
 import Header from './components/Header'
@@ -12,15 +13,20 @@ import Overlay from './components/Overlay'
 import Search from './components/Search'
 import Select from './components/Select'
 import Container from './components/Container'
+import Recent from './components/Recent'
 
 import groupOptions from './group-options'
 import groupContains from './group-contains'
 import applyGlyph from './apply-glyph'
 
+const searchPlaceholder = 'Search by name, unicode, category or block...'
+
 class Popup extends React.Component {
     constructor(props) {
         super(props)
         bind(this, [
+            'visibleGlyphs',
+            'handleApplyGlyph',
             'handleSearch',
             'handleSelect',
             'handleOpenSelect',
@@ -30,23 +36,63 @@ class Popup extends React.Component {
 
         this.state = {
             glyphs: glyphs.slice(0, 100),
-            visibility: true,
+            isVisible: true,
             isOpenSelect: false,
             searchValue: '',
-            selectGroup: [],
+            selectedGroups: [],
+            recentGlyphs: [],
             hoverValue: ''
         }
+        this.lastVisibleGlyphs = []
     }
 
     componentDidMount() {
         message.on('BROWSER_ACTION', () => {
             this.setState(prevState => ({
-                visibility: !prevState.visibility
+                isVisible: !prevState.isVisible
             }))
         })
 
         // for better performance
         setTimeout(() => this.setState({ glyphs }), 500)
+    }
+
+    visibleGlyphs() {
+        const { glyphs, searchValue, selectedGroups } = this.state
+        const result = glyphs.filter(
+            and(
+                or(
+                    object.icontains('value', searchValue),
+                    object.icontains('name', searchValue)
+                ),
+                or(
+                    groupContains('category', selectedGroups),
+                    groupContains('block', selectedGroups)
+                )
+            )
+        )
+        if (isEqualArray(result, this.lastVisibleGlyphs)) {
+            return this.lastVisibleGlyphs
+        }
+        this.lastVisibleGlyphs = result
+        return result
+    }
+
+    handleApplyGlyph(nextGlyph) {
+        if (applyGlyph(nextGlyph)) {
+            let { recentGlyphs } = this.state
+            if (recentGlyphs[0] === nextGlyph) {
+                return
+            }
+            let nextRecentGlyphs = recentGlyphs
+                .filter(glyph => glyph.value !== nextGlyph.value)
+                .slice(0, 9)
+
+            nextRecentGlyphs.unshift(nextGlyph)
+            this.setState({
+                recentGlyphs: nextRecentGlyphs
+            })
+        }
     }
 
     handleSearch({ target }) {
@@ -57,7 +103,7 @@ class Popup extends React.Component {
 
     handleSelect(selection) {
         this.setState({
-            selectGroup: selection
+            selectedGroups: selection
         })
     }
 
@@ -80,31 +126,25 @@ class Popup extends React.Component {
     }
 
     render() {
-        if (this.state.visibility === false) {
+        if (this.state.isVisible === false) {
             return null
         }
-        const { selectGroup, searchValue } = this.state
-        const visibleGlyphs = this.state.glyphs.filter(
-            and(
-                or(
-                    object.icontains('value', searchValue),
-                    object.icontains('name', searchValue)
-                ),
-                or(
-                    groupContains('category', selectGroup),
-                    groupContains('block', selectGroup)
-                )
-            )
-        )
+        const { searchValue, selectedGroups, recentGlyphs } = this.state
         return (
             <Frame title={'Glyphs'}>
                 <Header>
+                    <Recent
+                        glyphs={recentGlyphs}
+                        onClick={this.handleApplyGlyph}
+                        onHover={this.handleHover}
+                    />
                     <Search
                         defaultValue={searchValue}
+                        placeholder={searchPlaceholder}
                         onChange={this.handleSearch}
                     />
                     <Select
-                        value={selectGroup}
+                        value={selectedGroups}
                         options={groupOptions}
                         onChange={this.handleSelect}
                         onOpen={this.handleOpenSelect}
@@ -113,8 +153,8 @@ class Popup extends React.Component {
                 </Header>
                 <Body>
                     <Container
-                        glyphs={visibleGlyphs}
-                        onClick={applyGlyph}
+                        glyphs={this.visibleGlyphs()}
+                        onClick={this.handleApplyGlyph}
                         onHover={this.handleHover}
                     />
                 </Body>
