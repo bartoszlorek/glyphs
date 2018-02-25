@@ -1,20 +1,27 @@
 import { categories, blocks } from '../unicode/lookup-table/aglfn'
 
-const option = prefix => (name, index) => ({
-    value: `${prefix}.${index}`,
-    label: name,
-    index
-})
+const mapTable = table => {
+    let props = Object.keys(table),
+        result = []
+
+    for (let prop of props) {
+        result.push({
+            label: table[prop],
+            value: prop
+        })
+    }
+    return result
+}
 
 export default [
     {
         label: 'Category',
         name: 'category',
-        options: categories.map(option('c'))
+        options: mapTable(categories)
     },
     {
         label: 'Block',
         name: 'block',
-        options: blocks.map(option('b'))
+        options: mapTable(blocks)
     }
 ]

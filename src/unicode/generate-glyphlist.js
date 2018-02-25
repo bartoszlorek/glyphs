@@ -1,40 +1,44 @@
 const path = require('path')
-const unicodeRange = require('unicode-range')
+const unicodeRange = require('./.internal/unicode-range')
 const fileParser = require('../.utils/file-parser')
 const escSymbol = require('./.internal/esc-symbol')
-const getIndex = require('./.internal/get-index')
 
 const unidata = require('./lookup-table/unidata')
-const catdata = require('./lookup-table/categories')
-
-const toDescription = name => catdata[name]
+const categoriesTable = require('./lookup-table/categories')
 
 fileParser({
     source: path.join(__dirname, './resources/glyphlist.txt'),
     output: path.join(__dirname, './lookup-table/glyphlist.js'),
     iteratee: (line, props) => {
-        let fields = line.split(';'),
-            data = unidata[fields[1]]
+        let [glyphName, value] = line.split(';'),
+            data = unidata[value]
 
         if (data != null) {
-            let block = unicodeRange(fields[1])
+            let block = unicodeRange(value)
+
+            let blockIndex = '' + block.index
+            props.blocks[blockIndex] = block.name
+
+            let categoryKey = data.category
+            props.categories[categoryKey] = categoriesTable[categoryKey]
+
             return JSON.stringify({
-                value: fields[1],
+                value: value,
                 name: data.name.toLowerCase(),
-                symbol: escSymbol(fields[1]),
-                category: getIndex(props.categories, data.category),
-                block: getIndex(props.blocks, block)
+                symbol: escSymbol(value),
+                category: categoryKey,
+                block: blockIndex
             })
         }
     },
     props: {
-        categories: [],
-        blocks: []
+        categories: {},
+        blocks: {}
     },
     separator: ',',
     before: 'module.exports={glyphs:[',
-    after: (props) => {
-        let c = JSON.stringify(props.categories.map(toDescription)),
+    after: props => {
+        let c = JSON.stringify(props.categories),
             b = JSON.stringify(props.blocks)
         return `],categories:${c},blocks:${b}}`
     }
