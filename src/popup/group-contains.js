@@ -11,25 +11,24 @@ const inGroup = (name, values) => glyph => {
     return values.indexOf(glyph[name]) > -1
 }
 
-function groupByString(groupName, string = '') {
-    if (string === '') {
+function groupContainsValue(groupName, value = '') {
+    if (value === '') {
         return () => true
     }
-    let matchedValues = Object.keys(
-        pickBy(tables[groupName], icontains(string))
-    )
-    return inGroup(groupName, matchedValues)
+    let matchedGroupValues = Object.keys(
+        pickBy(tables[groupName], icontains(value)))
+    return inGroup(groupName, matchedGroupValues)
 }
 
-function groupByArray(groupName, selected = []) {
-    if (selected.length === 0) {
+function groupContainsArray(groupName, array = []) {
+    if (array.length === 0) {
         return () => true
     }
-    let matchedValues = selected.map(group => group.value)
-    return inGroup(groupName, matchedValues)
+    let matchedGroupValues = array.map(group => group.value)
+    return inGroup(groupName, matchedGroupValues)
 }
 
 export {
-    groupByString,
-    groupByArray
+    groupContainsValue,
+    groupContainsArray
 }

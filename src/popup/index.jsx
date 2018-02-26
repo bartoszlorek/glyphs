@@ -15,7 +15,7 @@ import Search from './components/Search'
 import Select from './components/Select'
 import GlyphsContainer from './components/GlyphsContainer'
 
-import { groupByString, groupByArray } from './group-contains'
+import { groupContainsValue, groupContainsArray } from './group-contains'
 import groupOptions from './group-options'
 import applyGlyph from './apply-glyph'
 
@@ -76,12 +76,12 @@ class Popup extends React.Component {
                 or(
                     object.icontains('value', searchValue),
                     object.icontains('name', searchValue),
-                    groupByString('category', searchValue),
-                    groupByString('block', searchValue)
+                    groupContainsValue('category', searchValue),
+                    groupContainsValue('block', searchValue)
                 ),
                 or(
-                    groupByArray('category', selectedGroups),
-                    groupByArray('block', selectedGroups)
+                    groupContainsArray('category', selectedGroups),
+                    groupContainsArray('block', selectedGroups)
                 )
             )
         )
