@@ -1,6 +1,9 @@
 const webpack = require('webpack')
 const path = require('path')
 
+// for babel-loader
+process.env.NODE_ENV = 'production'
+
 module.exports = {
     entry: {
         background: './src/background.js',
