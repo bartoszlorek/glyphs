@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 const Symbol = styled.span`
@@ -12,6 +13,7 @@ const printData = data => `U+${data.value} | ${data.name}`
 class Glyph extends React.PureComponent {
     constructor(props) {
         super(props)
+
         this.handleClick = e => {
             e.preventDefault()
             props.onClick(props.data)
@@ -36,7 +38,13 @@ class Glyph extends React.PureComponent {
     }
 }
 
-export default styled(Glyph)`
+Glyph.propTypes = {
+    data: PropTypes.object.isRequired,
+    onClick: PropTypes.func,
+    onHover: PropTypes.func
+}
+
+export const Placeholder = styled.div`
     position: relative;
     width: 10%;
     border: 1px solid #dadada;
@@ -45,7 +53,6 @@ export default styled(Glyph)`
     align-items: center;
     display: flex;
     overflow: hidden;
-    cursor: pointer;
 
     &:nth-child(-n + 10) {
         border-top-width: 1px;
@@ -59,9 +66,14 @@ export default styled(Glyph)`
         padding-top: 100%;
         height: 0;
     }
+`
+
+export default Placeholder.withComponent(Glyph).extend`
     &:hover {
         background: #e6e6e6;
+        cursor: pointer;
     }
+
     &:active {
         background: transparent;
     }
