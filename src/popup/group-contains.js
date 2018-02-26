@@ -1,13 +1,35 @@
-function groupContains(name, selectedGroups) {
-    if (selectedGroups.length === 0) {
-        return () => true
-    }
-    const currentGroups = selectedGroups.filter(
-        item => item.group.name === name
-    )
-    return glyph => currentGroups.some(
-        group => group.index === glyph[name]
-    )
+import { categories, blocks } from '../unicode/lookup-table/aglfn'
+import { icontains } from '../.utils/predicates'
+import { pickBy } from 'lodash'
+
+const tables = {
+    category: categories,
+    block: blocks
 }
 
-export default groupContains
+const inGroup = (name, values) => glyph => {
+    return values.indexOf(glyph[name]) > -1
+}
+
+function groupByString(groupName, string = '') {
+    if (string === '') {
+        return () => true
+    }
+    let matchedValues = Object.keys(
+        pickBy(tables[groupName], icontains(string))
+    )
+    return inGroup(groupName, matchedValues)
+}
+
+function groupByArray(groupName, selected = []) {
+    if (selected.length === 0) {
+        return () => true
+    }
+    let matchedValues = selected.map(group => group.value)
+    return inGroup(groupName, matchedValues)
+}
+
+export {
+    groupByString,
+    groupByArray
+}

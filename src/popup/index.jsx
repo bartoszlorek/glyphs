@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { bind } from '../.utils/react-utils'
 import { and, or, object } from '../.utils/predicates'
 import { glyphs } from '../unicode/lookup-table/aglfn'
@@ -12,14 +13,22 @@ import Body from './components/Body'
 import Overlay from './components/Overlay'
 import Search from './components/Search'
 import Select from './components/Select'
-import Container from './components/Container'
-import Recent from './components/Recent'
+import GlyphsContainer from './components/GlyphsContainer'
 
+import { groupByString, groupByArray } from './group-contains'
 import groupOptions from './group-options'
-import groupContains from './group-contains'
 import applyGlyph from './apply-glyph'
 
+const RECENT_GLYPHS_AMOUNT = 10
+const INITIAL_GLYPHS_AMOUNT = 100
+const INITIAL_GLYPHS_TIMEOUT = 500
+
 const searchPlaceholder = 'Search by name, unicode, category or block...'
+
+const RecentGlyphsContainer = GlyphsContainer.extend`
+    background: #fafafa;
+    margin: 0 0 5px;
+`
 
 class Popup extends React.Component {
     constructor(props) {
@@ -35,7 +44,7 @@ class Popup extends React.Component {
         ])
 
         this.state = {
-            glyphs: glyphs.slice(0, 100),
+            glyphs: glyphs.slice(0, INITIAL_GLYPHS_AMOUNT),
             isVisible: true,
             isOpenSelect: false,
             searchValue: '',
@@ -54,7 +63,10 @@ class Popup extends React.Component {
         })
 
         // for better performance
-        setTimeout(() => this.setState({ glyphs }), 500)
+        setTimeout(() =>
+            this.setState({ glyphs }),
+            INITIAL_GLYPHS_TIMEOUT
+        )
     }
 
     visibleGlyphs() {
@@ -63,11 +75,13 @@ class Popup extends React.Component {
             and(
                 or(
                     object.icontains('value', searchValue),
-                    object.icontains('name', searchValue)
+                    object.icontains('name', searchValue),
+                    groupByString('category', searchValue),
+                    groupByString('block', searchValue)
                 ),
                 or(
-                    groupContains('category', selectedGroups),
-                    groupContains('block', selectedGroups)
+                    groupByArray('category', selectedGroups),
+                    groupByArray('block', selectedGroups)
                 )
             )
         )
@@ -86,7 +100,7 @@ class Popup extends React.Component {
             }
             let nextRecentGlyphs = recentGlyphs
                 .filter(glyph => glyph.value !== nextGlyph.value)
-                .slice(0, 9)
+                .slice(0, RECENT_GLYPHS_AMOUNT - 1)
 
             nextRecentGlyphs.unshift(nextGlyph)
             this.setState({
@@ -133,8 +147,9 @@ class Popup extends React.Component {
         return (
             <Frame title={'Glyphs'}>
                 <Header>
-                    <Recent
-                        glyphs={recentGlyphs}
+                    <RecentGlyphsContainer
+                        items={recentGlyphs}
+                        placeholder={10}
                         onClick={this.handleApplyGlyph}
                         onHover={this.handleHover}
                     />
@@ -152,10 +167,11 @@ class Popup extends React.Component {
                     />
                 </Header>
                 <Body>
-                    <Container
-                        glyphs={this.visibleGlyphs()}
+                    <GlyphsContainer
+                        items={this.visibleGlyphs()}
                         onClick={this.handleApplyGlyph}
                         onHover={this.handleHover}
+                        emptyText={'no results'}
                     />
                 </Body>
                 <Footer value={this.state.hoverValue} />
