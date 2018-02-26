@@ -149,7 +149,7 @@ class Popup extends React.Component {
                 <Header>
                     <RecentGlyphsContainer
                         items={recentGlyphs}
-                        placeholder={10}
+                        placeholder={RECENT_GLYPHS_AMOUNT}
                         onClick={this.handleApplyGlyph}
                         onHover={this.handleHover}
                     />
