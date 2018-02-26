@@ -39,11 +39,17 @@
 .Select-option-group-label {
 	box-sizing: border-box;
 	background-color: @select-option-bg;
+	border-bottom: @select-input-border-width solid mix(@select-input-bg, @select-input-border-color, 50%);
 	color: @select-option-color;
-	font-weight: bold;
+	font-weight: 600;
 	cursor: default;
 	display: block;
 	padding: @select-padding-vertical @select-padding-horizontal;
+	line-height: 1;
+
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0px;
 }
 
 .Select-option-group-label ~ .Select-option,
@@ -61,6 +67,7 @@
 	cursor: pointer;
 	display: block;
 	padding: @select-padding-vertical @select-padding-horizontal;
+	line-height: 1;
 
 	&:last-child {
 		.border-bottom-radius( @select-input-border-radius );

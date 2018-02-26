@@ -7,7 +7,7 @@ export default styled.input.attrs({
 })`
     width: 100%;
     height: 32px;
-    padding: 0.5em;
+    padding: 8px;
     margin: 0 0 5px;
     box-sizing: border-box;
     border: 1px solid #ccc;

@@ -34,10 +34,10 @@
 		color: @select-item-color;
 		display: inline-block;
 		font-size: @select-item-font-size;
-		line-height: 1.4;
 		margin-left: @select-item-gutter;
 		margin-top: @select-item-gutter;
 		vertical-align: top;
+		height: @select-item-height;
 	}
 
 	// common
@@ -52,6 +52,7 @@
 		.border-right-radius( @select-item-border-radius );
 		cursor: default;
 		padding: @select-item-padding-vertical @select-item-padding-horizontal;
+		line-height: (@select-item-height - 2)
 	}
 	a.Select-value-label {
 		color: @select-item-color;
@@ -69,9 +70,9 @@
 		.border-left-radius( @select-item-border-radius );
 		border-right: 1px solid @select-item-border-color-fb;  /* Fallback color for IE 8 */
 		border-right: 1px solid @select-item-border-color;
+		line-height: (@select-item-height - 2);
 
-		// move the baseline up by 1px
-		padding: (@select-item-padding-vertical - 1) @select-item-padding-horizontal (@select-item-padding-vertical + 1);
+		padding: @select-item-padding-vertical @select-item-padding-horizontal;
 
 		&:hover,
 		&:focus {
