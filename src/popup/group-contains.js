@@ -1,31 +1,27 @@
-import { categories, blocks } from '../unicode/lookup-table/aglfn'
+import { groups } from '../unicode/lookup-table/aglfn-gg'
 import { icontains } from '../.utils/predicates'
 import { pickBy } from 'lodash'
 
-const tables = {
-    category: categories,
-    block: blocks
+const glyphIn = codes => ({ group }) => {
+    return codes.some(code => group.indexOf(code) >= 0)
 }
 
-const inGroup = (name, values) => glyph => {
-    return values.indexOf(glyph[name]) > -1
-}
-
-function groupContainsValue(groupName, value = '') {
+function groupContainsValue(value = '') {
     if (value === '') {
         return () => true
     }
-    let matchedGroupValues = Object.keys(
-        pickBy(tables[groupName], icontains(value)))
-    return inGroup(groupName, matchedGroupValues)
+    const matchedGroupCodes = Object.keys(
+        pickBy(groups, icontains(value)))
+    return glyphIn(matchedGroupCodes)
 }
 
-function groupContainsArray(groupName, array = []) {
+function groupContainsArray(array = []) {
     if (array.length === 0) {
         return () => true
     }
-    let matchedGroupValues = array.map(group => group.value)
-    return inGroup(groupName, matchedGroupValues)
+    const matchedGroupCodes = array.map(
+        group => group.value)
+    return glyphIn(matchedGroupCodes)
 }
 
 export {

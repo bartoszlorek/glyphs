@@ -2,28 +2,24 @@ const path = require('path')
 const fileParser = require('../.utils/file-parser')
 const escSymbol = require('./.internal/esc-symbol')
 
-const categoriesTable = require('./lookup-table/categories')
 const unidata = require('./lookup-table/unidata')
 const getBlock = require('./.internal/unicode-block')
+const getGroup = require('./general-groups/get-group')
+const getNames = require('./general-groups/get-names')
 
 fileParser({
     source: path.join(__dirname, './resources/aglfn.txt'),
-    output: path.join(__dirname, './lookup-table/aglfn.js'),
+    output: path.join(__dirname, './lookup-table/aglfn-gg.js'),
     iteratee: (line, props) => {
         const [ value, glyphName, charName ] = line.split(';')
         const { category: categoryKey } = unidata[value]
-        let { name: blockName, index: blockIndex } = getBlock(value)
-
-        blockIndex += ''
-        props.categories[categoryKey] = categoriesTable[categoryKey]
-        props.blocks[blockIndex] = blockName
+        const { index: blockIndex } = getBlock(value)
 
         return JSON.stringify({
             value: value,
-            name: charName.toLowerCase(),
             symbol: escSymbol(value),
-            category: categoryKey,
-            block: blockIndex
+            name: charName.toLowerCase(),
+            group: getGroup(categoryKey, blockIndex)
         })
     },
     props: {
@@ -33,8 +29,7 @@ fileParser({
     separator: ',',
     before: 'module.exports={glyphs:[',
     after: props => {
-        let c = JSON.stringify(props.categories),
-            b = JSON.stringify(props.blocks)
-        return `],categories:${c},blocks:${b}}`
+        let codes = JSON.stringify(getNames)
+        return `],groups:${codes}}`
     }
 })

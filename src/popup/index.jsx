@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { bind } from '../.utils/react-utils'
 import { and, or, object } from '../.utils/predicates'
-import { glyphs } from '../unicode/lookup-table/aglfn'
+import { glyphs } from '../unicode/lookup-table/aglfn-gg'
 import message from '../.utils/chrome/message'
 import isEqualArray from '../.utils/is-equal-array'
 
@@ -23,7 +23,7 @@ const RECENT_GLYPHS_AMOUNT = 10
 const INITIAL_GLYPHS_AMOUNT = 100
 const INITIAL_GLYPHS_TIMEOUT = 500
 
-const searchPlaceholder = 'Search by name, unicode, category or block...'
+const searchPlaceholder = 'Search by name, unicode value or category...'
 
 const RecentGlyphsContainer = GlyphsContainer.extend`
     background: #fafafa;
@@ -76,13 +76,9 @@ class Popup extends React.Component {
                 or(
                     object.icontains('value', searchValue),
                     object.icontains('name', searchValue),
-                    groupContainsValue('category', searchValue),
-                    groupContainsValue('block', searchValue)
+                    groupContainsValue(searchValue)
                 ),
-                or(
-                    groupContainsArray('category', selectedGroups),
-                    groupContainsArray('block', selectedGroups)
-                )
+                or(groupContainsArray(selectedGroups))
             )
         )
         if (isEqualArray(result, this.lastVisibleGlyphs)) {

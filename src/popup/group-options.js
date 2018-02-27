@@ -1,27 +1,8 @@
-import { categories, blocks } from '../unicode/lookup-table/aglfn'
+import { groups } from '../unicode/lookup-table/aglfn-gg'
 
-const mapTable = table => {
-    let props = Object.keys(table),
-        result = []
+const options = Object.keys(groups).map(prop => ({
+    label: groups[prop],
+    value: prop
+}))
 
-    for (let prop of props) {
-        result.push({
-            label: table[prop],
-            value: prop
-        })
-    }
-    return result
-}
-
-export default [
-    {
-        label: 'Category',
-        name: 'category',
-        options: mapTable(categories)
-    },
-    {
-        label: 'Block',
-        name: 'block',
-        options: mapTable(blocks)
-    }
-]
+export default options
