@@ -1,10 +1,10 @@
 const path = require('path')
-const unicodeRange = require('./.internal/unicode-range')
 const fileParser = require('../.utils/file-parser')
 const escSymbol = require('./.internal/esc-symbol')
 
-const unidata = require('./lookup-table/unidata')
 const categoriesTable = require('./lookup-table/categories')
+const unidata = require('./lookup-table/unidata')
+const getBlock = require('./.internal/unicode-block')
 
 fileParser({
     source: path.join(__dirname, './resources/glyphlist.txt'),
@@ -14,7 +14,7 @@ fileParser({
             data = unidata[value]
 
         if (data != null) {
-            let block = unicodeRange(value)
+            let block = getBlock(value)
 
             let blockIndex = '' + block.index
             props.blocks[blockIndex] = block.name

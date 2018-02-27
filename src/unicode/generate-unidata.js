@@ -1,5 +1,4 @@
 const path = require('path')
-const unicodeRange = require('unicode-range')
 const fileParser = require('../.utils/file-parser')
 
 fileParser({
