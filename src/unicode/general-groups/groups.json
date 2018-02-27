@@ -1,0 +1,64 @@
+{
+    "groups": [
+        {
+            "name": "Basic Latin and Latin 1",
+            "code": "Bl",
+            "category": [],
+            "block": [1, 2]
+        },
+        {
+            "name": "Extended Latin A",
+            "code": "Ea",
+            "category": [],
+            "block": [3, 67]
+        },
+        {
+            "name": "Extended Latin B",
+            "code": "Eb",
+            "category": [],
+            "block": [4]
+        },
+        {
+            "name": "Punctuation",
+            "code": "Pu",
+            "category": ["Mn", "Po", "Ps", "Pe", "Pd", "Pi", "Pf", "Pc"],
+            "block": [69]
+        },
+        {
+            "name": "Dashes & Quotes",
+            "code": "Dq",
+            "category": ["Pc", "Pd", "Pi", "Pf"],
+            "block": []
+        },
+        {
+            "name": "Currency",
+            "code": "Cu",
+            "category": ["Sc"],
+            "block": []
+        },
+        {
+            "name": "Numbers",
+            "code": "No",
+            "category": ["Nd", "Nl", "No"],
+            "block": []
+        },
+        {
+            "name": "Math Symbols",
+            "code": "Ms",
+            "category": ["Sm"],
+            "block": []
+        },
+        {
+            "name": "Symbols",
+            "code": "Sy",
+            "category": ["So", "Sk"],
+            "block": [74]
+        },
+        {
+            "name": "Greek and Coptic",
+            "code": "Gc",
+            "category": [],
+            "block": [8]
+        }
+    ]
+}
