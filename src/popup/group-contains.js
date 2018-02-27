@@ -1,4 +1,4 @@
-import { groups } from '../unicode/lookup-table/aglfn-gg'
+import { groups } from '../unicode/lookup-tables/aglfn-gg'
 import { icontains } from '../.utils/predicates'
 import { pickBy } from 'lodash'
 

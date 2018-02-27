@@ -2,13 +2,13 @@ const path = require('path')
 const fileParser = require('../.utils/file-parser')
 const escSymbol = require('./.internal/esc-symbol')
 
-const categoriesTable = require('./lookup-table/categories')
-const unidata = require('./lookup-table/unidata')
+const categoriesTable = require('./lookup-tables/categories')
+const unidata = require('./lookup-tables/unidata')
 const getBlock = require('./.internal/unicode-block')
 
 fileParser({
     source: path.join(__dirname, './resources/glyphlist.txt'),
-    output: path.join(__dirname, './lookup-table/glyphlist.js'),
+    output: path.join(__dirname, './lookup-tables/glyphlist.js'),
     iteratee: (line, props) => {
         let [glyphName, value] = line.split(';'),
             data = unidata[value]

@@ -3,7 +3,7 @@ const fileParser = require('../.utils/file-parser')
 
 fileParser({
     source: path.join(__dirname, './resources/unidata.txt'),
-    output: path.join(__dirname, './lookup-table/unidata.js'),
+    output: path.join(__dirname, './lookup-tables/unidata.js'),
     iteratee: line => {
         let fields = line.split(';')
         return `"${fields[0]}":` + JSON.stringify({

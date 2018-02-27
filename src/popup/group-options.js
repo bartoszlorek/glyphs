@@ -1,4 +1,4 @@
-import { groups } from '../unicode/lookup-table/aglfn-gg'
+import { groups } from '../unicode/lookup-tables/aglfn-gg'
 
 const options = Object.keys(groups).map(prop => ({
     label: groups[prop],
