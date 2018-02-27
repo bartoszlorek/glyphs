@@ -67,9 +67,10 @@ GlyphsContainer.defaultProps = {
 }
 
 export default styled(GlyphsContainer)`
-    flex-wrap: wrap;
-    overflow: auto;
     display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    border-radius: 2px;
 
     & * {
         box-sizing: border-box;

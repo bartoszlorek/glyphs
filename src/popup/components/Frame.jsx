@@ -48,6 +48,7 @@ Frame.defaultProps = {
 export default styled(Frame)`
     z-index: 2147483644;
     position: fixed;
+    overflow: hidden;
     top: 0;
     right: 0;
     left: auto;
@@ -62,6 +63,7 @@ export default styled(Frame)`
     background: #fff;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
     border: 1px solid #b8b8b8;
+    border-radius: 2px;
 
     color: #333;
     font-size: 14px;
