@@ -2,13 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+const WHITESPACE_CODE = 'Ws'
+
+const handleMouseDown = e => e.preventDefault()
+const isWhitespace = ({ group }) => group.indexOf(WHITESPACE_CODE) >= 0
+const printData = data => `U+${data.value} | ${data.name}`
+
 const Symbol = styled.span`
     font-size: 2em;
     line-height: 1em;
+    background: ${props => (props.fill ? '#bdc0c1' : 'transparent')};
 `
-
-const handleMouseDown = e => e.preventDefault()
-const printData = data => `U+${data.value} | ${data.name}`
 
 class Glyph extends React.PureComponent {
     constructor(props) {
@@ -32,7 +36,7 @@ class Glyph extends React.PureComponent {
                 onMouseDown={handleMouseDown}
                 onMouseEnter={this.handleMouseEnter}
             >
-                <Symbol>{data.symbol}</Symbol>
+                <Symbol fill={isWhitespace(data)}>{data.symbol}</Symbol>
             </div>
         )
     }
@@ -70,7 +74,7 @@ export const Placeholder = styled.div`
 
 export default Placeholder.withComponent(Glyph).extend`
     &:hover {
-        background: #e6e6e6;
+        background: #eaebeb;
         cursor: pointer;
     }
 
