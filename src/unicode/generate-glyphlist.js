@@ -1,5 +1,5 @@
 const path = require('path')
-const fileParser = require('../.utils/file-parser')
+const fileParser = require('./.internal/file-parser')
 const escSymbol = require('./.internal/esc-symbol')
 
 const categoriesTable = require('./lookup-tables/categories')

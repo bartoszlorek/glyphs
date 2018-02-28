@@ -1,5 +1,5 @@
 const path = require('path')
-const fileParser = require('../.utils/file-parser')
+const fileParser = require('./.internal/file-parser')
 const escSymbol = require('./.internal/esc-symbol')
 
 const unidata = require('./lookup-tables/unidata')
@@ -8,7 +8,7 @@ const getGroup = require('./general-groups/get-group')
 const getNames = require('./general-groups/get-names')
 
 fileParser({
-    source: path.join(__dirname, './resources/aglfn.txt'),
+    source: path.join(__dirname, './resources/aglfn-ext.txt'),
     output: path.join(__dirname, './lookup-tables/aglfn-gg.js'),
     iteratee: (line, props) => {
         const [ value, glyphName, charName ] = line.split(';')

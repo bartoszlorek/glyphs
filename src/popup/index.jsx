@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { bind } from '../.utils/react-utils'
 import { and, or, object } from '../.utils/predicates'
-import { glyphs } from '../unicode/lookup-tables/aglfn-gg'
+import { glyphs } from '../unicode/lookup-tables/aglfn-gg-sorted'
 import message from '../.utils/chrome/message'
 import isEqualArray from '../.utils/is-equal-array'
 

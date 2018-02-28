@@ -1,5 +1,5 @@
 const path = require('path')
-const fileParser = require('../.utils/file-parser')
+const fileParser = require('./.internal/file-parser')
 
 fileParser({
     source: path.join(__dirname, './resources/unidata.txt'),
