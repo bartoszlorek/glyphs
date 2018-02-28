@@ -11,7 +11,7 @@ const printData = data => `U+${data.value} | ${data.name}`
 const Symbol = styled.span`
     font-size: 2em;
     line-height: 1em;
-    background: ${props => (props.fill ? '#bdc0c1' : 'transparent')};
+    background: ${props => (props.filled ? '#bdc0c1' : 'transparent')};
 `
 
 class Glyph extends React.PureComponent {
@@ -36,7 +36,7 @@ class Glyph extends React.PureComponent {
                 onMouseDown={handleMouseDown}
                 onMouseEnter={this.handleMouseEnter}
             >
-                <Symbol fill={isWhitespace(data)}>{data.symbol}</Symbol>
+                <Symbol filled={isWhitespace(data)}>{data.symbol}</Symbol>
             </div>
         )
     }
@@ -46,6 +46,14 @@ Glyph.propTypes = {
     data: PropTypes.object.isRequired,
     onClick: PropTypes.func,
     onHover: PropTypes.func
+}
+
+Symbol.propTypes = {
+    filled: PropTypes.bool
+}
+
+Symbol.defaultProps = {
+    filled: false
 }
 
 export const Placeholder = styled.div`
