@@ -31,6 +31,12 @@
             "block": []
         },
         {
+            "name": "White Space",
+            "code": "Ws",
+            "category": ["Zs"],
+            "block": []
+        },
+        {
             "name": "Currency",
             "code": "Cu",
             "category": ["Sc"],
