@@ -11,8 +11,8 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import Body from './components/Body'
 import Overlay from './components/Overlay'
-import Search from './components/Search'
 import Select from './components/Select'
+import InputSearch from './components/InputSearch'
 import GlyphsContainer from './components/GlyphsContainer'
 
 import { groupContainsValue, groupContainsArray } from './group-contains'
@@ -149,7 +149,7 @@ class Popup extends React.Component {
                         onClick={this.handleApplyGlyph}
                         onHover={this.handleHover}
                     />
-                    <Search
+                    <InputSearch
                         defaultValue={searchValue}
                         placeholder={searchPlaceholder}
                         onChange={this.handleSearch}

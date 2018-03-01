@@ -1,10 +1,6 @@
-import React from 'react'
 import styled from 'styled-components'
 
-export default styled.input.attrs({
-    defaultValue: props => props.defaultValue,
-    type: 'search'
-})`
+export default styled.input`
     width: 100%;
     height: 32px;
     padding: 8px;
