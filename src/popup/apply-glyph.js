@@ -2,6 +2,7 @@ import closest from '../.utils/closest'
 import setCaret from '../.utils/set-caret'
 import spliceString from '../.utils/splice-string'
 import dispatchEvent from './dispatch-event'
+import { setValue, setTextContent } from '../.utils/set-native'
 
 import {
     selectionRange,

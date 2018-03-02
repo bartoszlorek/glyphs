@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import setNativeValue from '../../.utils/set-native-value'
+import { setValue } from '../../.utils/set-native'
 
 import Input from './Input'
 
@@ -34,7 +34,7 @@ class InputSearch extends React.PureComponent {
     }
 
     handleClear() {
-        setNativeValue(this.input, '')
+        setValue(this.input, '')
         this.input.dispatchEvent(
             new Event('input', {
                 bubbles: true
