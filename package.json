@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ubery/glyphs.git"
+    "url": "git+https://github.com/bartoszlorek/glyphs.git"
   },
   "author": "Bartosz Lorek",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ubery/glyphs/issues"
+    "url": "https://github.com/bartoszlorek/glyphs/issues"
   },
-  "homepage": "https://github.com/ubery/glyphs#readme",
+  "homepage": "https://github.com/bartoszlorek/glyphs#readme",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
