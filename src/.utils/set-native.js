@@ -4,12 +4,12 @@ const setNative = property => {
     const getDescriptor = element => {
         return Object.getOwnPropertyDescriptor(element, property)
     }
-    const withDescriptor = getPrototypeBy(
+    const protoWithDescriptor = getPrototypeBy(
         element => getDescriptor(element) !== undefined
     )
 
     return (element, value) => {
-        let prototype = withDescriptor(element)
+        let prototype = protoWithDescriptor(element)
         if (prototype == null) {
             return false
         }
@@ -19,10 +19,8 @@ const setNative = property => {
     }
 }
 
-const setValue = setNative('value')
-const setTextContent = setNative('textContent')
+export const setNativeValue = setNative('value')
+export const setNativeNodeValue = setNative('nodeValue')
+export const setNativeTextContent = setNative('textContent')
 
-export {
-    setValue,
-    setTextContent
-}
+export default setNative
