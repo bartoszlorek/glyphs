@@ -5,7 +5,8 @@ function dispatchEvent(element) {
 
     let events = ['change', 'input'].map(name =>
         new Event(name, {
-            bubbles: true
+            bubbles: true,
+            cancelable: true
         })
     )
     
