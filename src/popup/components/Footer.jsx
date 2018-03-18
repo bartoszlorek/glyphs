@@ -16,7 +16,7 @@ export default styled(Footer)`
     height: 32px;
     background: #fff;
     border-top: 1px solid #dadada;
-    font-family: monospace;
+    font-family: monospace !important;
     line-height: 30px;
     font-size: 13px;
 
