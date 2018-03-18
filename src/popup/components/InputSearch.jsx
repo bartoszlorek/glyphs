@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { setNativeValue } from '../../.utils/set-native'
+import { bind } from '../../.utils/react-utils'
 
 import Input from './Input'
 
@@ -30,7 +31,13 @@ const ButtonClear = styled.div`
 class InputSearch extends React.PureComponent {
     constructor(props) {
         super(props)
-        this.handleClear = this.handleClear.bind(this)
+        bind(this, [
+            'handleClear',
+            'handleChange'
+        ])
+        this.state = {
+            isEmpty: true
+        }
     }
 
     handleClear() {
@@ -42,17 +49,27 @@ class InputSearch extends React.PureComponent {
         )
     }
 
+    handleChange(e) {
+        this.setState({
+            isEmpty: e.target.value === ''
+        })
+        this.props.onChange(e)
+    }
+
     render() {
-        let { className, defaultValue, placeholder, onChange } = this.props
+        let { className, defaultValue, placeholder } = this.props
+
         return (
             <div className={className}>
                 <Input
                     innerRef={node => (this.input = node)}
                     defaultValue={defaultValue}
                     placeholder={placeholder}
-                    onChange={onChange}
+                    onChange={this.handleChange}
                 />
-                <ButtonClear onClick={this.handleClear}>×</ButtonClear>
+                {!this.state.isEmpty && (
+                    <ButtonClear onClick={this.handleClear}>×</ButtonClear>
+                )}
             </div>
         )
     }
@@ -60,12 +77,14 @@ class InputSearch extends React.PureComponent {
 
 InputSearch.propTypes = {
     defaultValue: PropTypes.string,
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
+    onChange: PropTypes.func
 }
 
 InputSearch.defaultProps = {
     defaultValue: '',
-    placeholder: ''
+    placeholder: '',
+    onChange: () => null
 }
 
 export default styled(InputSearch)`
