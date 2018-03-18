@@ -6,6 +6,7 @@ import { glyphs } from '../unicode/lookup-tables/aglfn-gg-sorted'
 import message from '../.utils/chrome/message'
 import isEqualArray from '../.utils/is-equal-array'
 
+import Flash from './components/Flash'
 import Frame from './components/Frame'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -36,11 +37,13 @@ class Popup extends React.Component {
         bind(this, [
             'visibleGlyphs',
             'handleApplyGlyph',
+            'handleVisible',
             'handleSearch',
             'handleSelect',
             'handleOpenSelect',
             'handleCloseSelect',
-            'handleHover'
+            'handleHover',
+            'handleCloseFlash'
         ])
 
         this.state = {
@@ -50,16 +53,15 @@ class Popup extends React.Component {
             searchValue: '',
             selectedGroups: [],
             recentGlyphs: [],
-            hoverValue: ''
+            hoverValue: '',
+            error: ''
         }
         this.lastVisibleGlyphs = []
     }
 
     componentDidMount() {
         message.on('BROWSER_ACTION', () => {
-            this.setState(prevState => ({
-                isVisible: !prevState.isVisible
-            }))
+            this.handleVisible()
         })
 
         // for better performance
@@ -89,20 +91,28 @@ class Popup extends React.Component {
     }
 
     handleApplyGlyph(nextGlyph) {
-        if (applyGlyph(nextGlyph)) {
-            let { recentGlyphs } = this.state
-            if (recentGlyphs[0] === nextGlyph) {
-                return
-            }
-            let nextRecentGlyphs = recentGlyphs
-                .filter(glyph => glyph.value !== nextGlyph.value)
-                .slice(0, RECENT_GLYPHS_AMOUNT - 1)
+        applyGlyph(nextGlyph)
+            .then(() => {
+                let { recentGlyphs } = this.state
+                if (recentGlyphs[0] === nextGlyph) {
+                    return
+                }
+                let nextRecentGlyphs = recentGlyphs
+                    .filter(glyph => glyph.value !== nextGlyph.value)
+                    .slice(0, RECENT_GLYPHS_AMOUNT - 1)
 
-            nextRecentGlyphs.unshift(nextGlyph)
-            this.setState({
-                recentGlyphs: nextRecentGlyphs
+                nextRecentGlyphs.unshift(nextGlyph)
+                this.setState({
+                    recentGlyphs: nextRecentGlyphs
+                })
             })
-        }
+            .catch(error => this.setState({ error }))
+    }
+
+    handleVisible() {
+        this.setState(prevState => ({
+            isVisible: !prevState.isVisible
+        }))
     }
 
     handleSearch({ target }) {
@@ -135,27 +145,35 @@ class Popup extends React.Component {
         })
     }
 
+    handleCloseFlash() {
+        this.setState({
+            error: ''
+        })
+    }
+
     render() {
         if (this.state.isVisible === false) {
             return null
         }
-        const { searchValue, selectedGroups, recentGlyphs } = this.state
         return (
-            <Frame title={'Glyphs'}>
+            <Frame
+                title={'Glyphs'}
+                onClose={this.handleVisible}
+            >
                 <Header>
                     <RecentGlyphsContainer
-                        items={recentGlyphs}
+                        items={this.state.recentGlyphs}
                         placeholder={RECENT_GLYPHS_AMOUNT}
                         onClick={this.handleApplyGlyph}
                         onHover={this.handleHover}
                     />
                     <InputSearch
-                        defaultValue={searchValue}
+                        defaultValue={this.state.searchValue}
                         placeholder={searchPlaceholder}
                         onChange={this.handleSearch}
                     />
                     <Select
-                        value={selectedGroups}
+                        value={this.state.selectedGroups}
                         options={groupOptions}
                         onChange={this.handleSelect}
                         onOpen={this.handleOpenSelect}
@@ -172,6 +190,10 @@ class Popup extends React.Component {
                 </Body>
                 <Footer value={this.state.hoverValue} />
                 <Overlay isVisible={this.state.isOpenSelect} />
+                <Flash
+                    value={this.state.error}
+                    onClose={this.handleCloseFlash}
+                />
             </Frame>
         )
     }
