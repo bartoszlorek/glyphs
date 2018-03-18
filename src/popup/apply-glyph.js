@@ -2,7 +2,7 @@ import closest from '../.utils/closest'
 import setCaret from '../.utils/set-caret'
 import spliceString from '../.utils/splice-string'
 import dispatchEvent from './dispatch-event'
-import { setValue, setTextContent } from '../.utils/set-native'
+import validation from './validation'
 
 import {
     selectionRange,
@@ -10,21 +10,30 @@ import {
     nodeValue,
     isEditable,
     isTextElement,
-    setNodeValue
+    setValue
 } from '../.utils/selection.min.js'
 
-const isEditableText = e => isTextElement(e) || isEditable(e)
+const isEditableText = e => isEditable(e) || isTextElement(e)
 const isGlyphsFrame = closest(e => e.id === 'glyphs-frame')
 
 const addValue = (element, value) => {
-    let { node, text, startOffset, endOffset } = element
-    setNodeValue(node, spliceString(text, startOffset, endOffset, value))
+    let nextValue = spliceString(
+        element.text,
+        element.startOffset,
+        element.endOffset,
+        value
+    )
+    return setValue(element.node, nextValue)
 }
 
-function applyGlyph(glyph) {
+const applyGlyph = glyph => new Promise((resolve, reject) => {
     let range = selectionRange()
+    let valid = validation(range);
+
+    if (valid.failed) {
+        return reject(valid.error)
+    }
     if (
-        range !== null &&
         !isGlyphsFrame(range.commonAncestorContainer) &&
         isEditableText(range.commonAncestorContainer)
     ) {
@@ -36,9 +45,8 @@ function applyGlyph(glyph) {
             setCaret(node, endOffset + 1)
             dispatchEvent(node)
         })
-        return true
+        resolve(glyph)
     }
-    return false
-}
+})
 
 export default applyGlyph
