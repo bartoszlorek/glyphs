@@ -1,13 +1,12 @@
 import closest from '../.utils/closest'
-import setCaret from '../.utils/set-caret'
 import spliceString from '../.utils/splice-string'
 import dispatchEvent from './dispatch-event'
 import validation from './validation'
 
 import {
+    setSelection,
     selectionRange,
     rangeContent,
-    nodeValue,
     isEditable,
     isTextElement,
     setValue
@@ -27,24 +26,31 @@ const addValue = (element, value) => {
 }
 
 const applyGlyph = glyph => new Promise((resolve, reject) => {
-    let range = selectionRange()
-    let valid = validation(range);
+    let range = selectionRange(),
+        valid = validation(range)
 
     if (valid.failed) {
         return reject(valid.error)
     }
-    if (
-        !isGlyphsFrame(range.commonAncestorContainer) &&
-        isEditableText(range.commonAncestorContainer)
-    ) {
-        rangeContent(range).forEach((element, index) => {
-            let { node, endOffset } = element,
-                value = index === 0 ? glyph.symbol : ''
 
-            addValue(element, value)
-            setCaret(node, endOffset + 1)
+    let container = range.commonAncestorContainer
+    if (!isGlyphsFrame(container) && isEditableText(container)) {
+        rangeContent(range).forEach((element, index) => {
+            let { node, startOffset } = element
+
+            // apply glyph only to the first node
+            // and leave the rest of selection empty
+            if (index === 0) {
+                addValue(element, glyph.symbol)
+                setSelection(node, startOffset + 1)
+            } else {
+                addValue(element, '')
+            }
+
+            // force updates
             dispatchEvent(node)
         })
+
         resolve(glyph)
     }
 })
