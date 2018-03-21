@@ -2,18 +2,17 @@ import closest from '../.utils/closest'
 import spliceString from '../.utils/splice-string'
 import dispatchEvent from './dispatch-event'
 import validation from './validation'
-
 import {
     setSelection,
     selectionRange,
     rangeContent,
-    isEditable,
-    isTextElement,
     setValue
 } from '../.utils/selection.min.js'
 
-const isEditableText = e => isEditable(e) || isTextElement(e)
-const isGlyphsFrame = closest(e => e.id === 'glyphs-frame')
+const isInsideFrame = element => {
+    let isFrame = e => e.id === 'glyphs-frame'
+    return closest(isFrame)(element) !== null
+}
 
 const addValue = (element, value) => {
     let nextValue = spliceString(
@@ -32,27 +31,28 @@ const applyGlyph = glyph => new Promise((resolve, reject) => {
     if (valid.failed) {
         return reject(valid.error)
     }
-
     let container = range.commonAncestorContainer
-    if (!isGlyphsFrame(container) && isEditableText(container)) {
-        rangeContent(range).forEach((element, index) => {
-            let { node, startOffset } = element
-
-            // apply glyph only to the first node
-            // and leave the rest of selection empty
-            if (index === 0) {
-                addValue(element, glyph.symbol)
-                setSelection(node, startOffset + 1)
-            } else {
-                addValue(element, '')
-            }
-
-            // force updates
-            dispatchEvent(node)
-        })
-
-        resolve(glyph)
+    if (!range.editable || isInsideFrame(container)) {
+        return 'soft reject'
     }
+
+    rangeContent(range).forEach((element, index) => {
+        let { node, startOffset } = element
+
+        // apply glyph only to the first node
+        // and leave the rest of selection empty
+        if (index === 0) {
+            addValue(element, glyph.symbol)
+            setSelection(node, startOffset + 1)
+        } else {
+            addValue(element, '')
+        }
+
+        // force updates
+        dispatchEvent(node)
+    })
+
+    resolve(glyph)
 })
 
 export default applyGlyph
