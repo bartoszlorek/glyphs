@@ -6,19 +6,17 @@ const script = scriptableTab()
 const counter = createCounter(bindListener({}))
 
 const alertError = () => alert('This tab cannot be scripted.')
-const executeTab = id => {
-    counter(id)
-        .equal(0, () =>
-            chrome.tabs.executeScript(id, {
-                file: 'popup.js'
-            })
-        )
-        .greater(0, () =>
-            message.toTab.one(id, {
-                type: 'BROWSER_ACTION'
-            })
-        )
-}
+const executeTab = id => counter(id)
+    .equal(0, () =>
+        chrome.tabs.executeScript(id, {
+            file: 'popup.js'
+        })
+    )
+    .greater(0, () =>
+        message.toTab.one(id, {
+            type: 'BROWSER_ACTION'
+        })
+    )
 
 chrome.browserAction.onClicked.addListener(tab =>
     script(tab.id)
