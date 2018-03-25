@@ -1,27 +1,15 @@
 import closest from '../.utils/closest'
-import spliceString from '../.utils/splice-string'
 import dispatchEvent from './dispatch-event'
 import validation from './validation'
 import {
     setSelection,
     selectionRange,
-    rangeContent,
-    setValue
+    rangeContent
 } from '../.utils/selection.min.js'
 
 const isInsideFrame = element => {
     let isFrame = e => e.id === 'glyphs-frame'
     return closest(isFrame)(element) !== null
-}
-
-const addValue = (element, value) => {
-    let nextValue = spliceString(
-        element.text,
-        element.startOffset,
-        element.endOffset,
-        value
-    )
-    return setValue(element.node, nextValue)
 }
 
 const applyGlyph = glyph => new Promise((resolve, reject) => {
@@ -36,16 +24,16 @@ const applyGlyph = glyph => new Promise((resolve, reject) => {
         return 'soft reject'
     }
 
-    rangeContent(range).forEach((element, index) => {
-        let { node, startOffset } = element
+    rangeContent(range).forEach((item, index) => {
+        let { node, startOffset } = item
 
         // apply glyph only to the first node
         // and leave the rest of selection empty
         if (index === 0) {
-            addValue(element, glyph.symbol)
+            item.selectedText = glyph.symbol
             setSelection(node, startOffset + 1)
         } else {
-            addValue(element, '')
+            item.selectedText = ''
         }
 
         // force updates
