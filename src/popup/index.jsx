@@ -5,6 +5,7 @@ import { and, or, object } from '../.utils/predicates'
 import { glyphs } from '../unicode/lookup-tables/aglfn-gg-sorted'
 import message from '../.utils/chrome/message'
 import isEqualArray from '../.utils/is-equal-array'
+import createFocus from '../.utils/focus'
 
 import Flash from './components/Flash'
 import Frame from './components/Frame'
@@ -26,6 +27,10 @@ const INITIAL_GLYPHS_TIMEOUT = 500
 
 const searchPlaceholder = 'Search by name, unicode value or category...'
 
+const isHandler = elem => {
+    return elem && elem.classList.contains('frame-handler')
+}
+
 const RecentGlyphsContainer = GlyphsContainer.extend`
     background: #fafafa;
     margin: 0 0 5px;
@@ -43,7 +48,8 @@ class Popup extends React.Component {
             'handleOpenSelect',
             'handleCloseSelect',
             'handleHover',
-            'handleCloseFlash'
+            'handleCloseFlash',
+            'handleFrameMouseUp'
         ])
 
         this.state = {
@@ -57,6 +63,9 @@ class Popup extends React.Component {
             error: ''
         }
         this.lastVisibleGlyphs = []
+        this.focus = createFocus(10)
+            .push('active')
+            .attach()
     }
 
     componentDidMount() {
@@ -110,6 +119,11 @@ class Popup extends React.Component {
     }
 
     handleVisible() {
+        if (this.state.isVisible) {
+            this.focus.detach()
+        } else {
+            this.focus.attach()
+        }
         this.setState(prevState => ({
             isVisible: !prevState.isVisible
         }))
@@ -151,6 +165,10 @@ class Popup extends React.Component {
         })
     }
 
+    handleFrameMouseUp(e) {
+        this.focus.prev(1, () => isHandler(e.target))
+    }
+
     render() {
         if (this.state.isVisible === false) {
             return null
@@ -159,6 +177,7 @@ class Popup extends React.Component {
             <Frame
                 title={'Glyphs'}
                 onClose={this.handleVisible}
+                onMouseUp={this.handleFrameMouseUp}
             >
                 <Header>
                     <RecentGlyphsContainer
