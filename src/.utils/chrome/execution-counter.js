@@ -2,13 +2,13 @@ import { isPlainObject } from 'lodash'
 
 const RESET_COUNTER = 'RESET_COUNTER'
 
-function bindEmitter() {
+function bindTabEmitter() {
     window.addEventListener('beforeunload', () => {
         chrome.runtime.sendMessage({ type: RESET_COUNTER })
     })
 }
 
-function bindListener(cache) {
+function bindBackListener(cache = {}) {
     chrome.runtime.onMessage.addListener((request, sender) => {
         if (request.type === RESET_COUNTER) {
             cache[sender.tab.id] = -1
@@ -50,6 +50,6 @@ function createCounter(cache) {
 
 export {
     createCounter,
-    bindEmitter,
-    bindListener
+    bindTabEmitter,
+    bindBackListener
 }

@@ -25,6 +25,21 @@ const sendToFront = (id, spec, callback) => {
     }
 }
 
+sendToFront.all = (spec, callback) => {
+    chrome.tabs.query({}, tabs => {
+        tabs.forEach(tab => sendToFront(tab.id, spec, callback))
+    })
+}
+
+sendToFront.current = (spec, callback) => {
+    chrome.tabs.query({
+        currentWindow: true,
+        active: true
+    }, tabs => {
+        sendToFront(tabs[0].id, spec, callback)
+    })
+}
+
 const message = {
     on: (type, callback) => {
         validMessageType(type)
@@ -40,22 +55,7 @@ const message = {
     },
     toBackground: sendToBack,
     toPopup: sendToBack,
-    toTab: {
-        one: sendToFront,
-        all: (spec, callback) => {
-            chrome.tabs.query({}, tabs => {
-                tabs.forEach(tab => sendToFront(tab.id, spec, callback))
-            })
-        },
-        current: (spec, callback) => {
-            chrome.tabs.query({
-                currentWindow: true,
-                active: true
-            }, tabs => {
-                sendToFront(tabs[0].id, spec, callback)
-            })
-        }
-    }
+    toTab: sendToFront
 }
 
 export default message

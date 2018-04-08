@@ -1,9 +1,12 @@
-import scriptableTab from './.utils/chrome/scriptable-tab'
-import { createCounter, bindListener } from './.utils/chrome/execution-counter'
 import message from './.utils/chrome/message'
+import executableTab from './.utils/chrome/executable-tab'
+import {
+    createCounter,
+    bindBackListener
+} from './.utils/chrome/execution-counter'
 
-const script = scriptableTab()
-const counter = createCounter(bindListener({}))
+const exec = executableTab()
+const counter = createCounter(bindBackListener())
 
 const alertError = () => alert('This tab cannot be scripted.')
 const executeTab = id => counter(id)
@@ -13,13 +16,13 @@ const executeTab = id => counter(id)
         })
     )
     .greater(0, () =>
-        message.toTab.one(id, {
+        message.toTab(id, {
             type: 'BROWSER_ACTION'
         })
     )
 
 chrome.browserAction.onClicked.addListener(tab =>
-    script(tab.id)
+    exec(tab)
         .then(executeTab)
         .catch(alertError)
 )
