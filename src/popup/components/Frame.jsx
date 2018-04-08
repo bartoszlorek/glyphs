@@ -31,10 +31,10 @@ class Frame extends React.PureComponent {
     }
 
     render() {
-        let { className, children, title, onClose } = this.props
+        let { children, title, onClose } = this.props
 
         return (
-            <div id={titleSlug(title)} className={className} ref="frameElement">
+            <div {...this.props} id={titleSlug(title)} ref="frameElement">
                 <Handler className="frame-handler">
                     <span>{title}</span>
                     <ButtonClose onClick={onClose} />
