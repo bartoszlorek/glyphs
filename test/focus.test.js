@@ -1,6 +1,19 @@
-import createFocus, { take } from '../src/.utils/focus'
+import createFocus from '../src/.utils/focus'
+
+beforeEach(() => {
+    document.activeElement.blur()
+})
 
 describe('focus.js', () => {
+    document.body.innerHTML = `
+        <input id="a" />
+        <input id="b" />
+        <input id="c" />
+    `
+    const inputA = document.getElementById('a')
+    const inputB = document.getElementById('b')
+    const inputC = document.getElementById('c')
+
     it('returns function with api properties', () => {
         const focus = createFocus()
 
@@ -31,18 +44,12 @@ describe('focus.js', () => {
     })
 
     it('push active element to the history', () => {
-        document.body.innerHTML = `
-            <input id="a" />
-            <input id="b" />
-        `
-        const input = document.getElementById('a')
-        input.focus()
-
+        inputA.focus()
         const focus = createFocus()
         focus.logger = jest.fn()
         focus.push('active')
 
-        expect(focus.logger).toBeCalledWith(input, [input])
+        expect(focus.logger).toBeCalledWith(inputA, [inputA])
     })
 
     it('should limit history steps', () => {
@@ -56,20 +63,15 @@ describe('focus.js', () => {
     })
 
     describe('should focus on added element by index:', () => {
-        document.body.innerHTML = `
-            <input id="a" />
-            <input id="b" />
-            <input id="c" />
-        `
-        const inputA = document.getElementById('a')
-        const inputB = document.getElementById('b')
-        const inputC = document.getElementById('c')
-        const history = [inputA, inputB, inputC]
         const focus = createFocus()
+        focus.push(inputA, inputB, inputC)
 
-        focus.push(inputA)
-        focus.push(inputB)
-        focus.push(inputC)
+        it('ignore wrong indices', () => {
+            focus()
+            focus(null)
+            focus(() => {})
+            expect(document.activeElement).toBe(document.body)
+        })
 
         it('positive in the range', () => {
             focus(1)
@@ -91,11 +93,41 @@ describe('focus.js', () => {
             expect(document.activeElement).toBe(inputA)
         })
 
-        it('index as function', () => {
-            let mockFn = jest.fn(() => 1)
+        it('as result of function', () => {
+            const mockFn = jest.fn(() => 1)
             focus(mockFn)
             expect(document.activeElement).toBe(inputB)
-            expect(mockFn).toBeCalledWith(history)
+            expect(mockFn).toBeCalledWith([inputA, inputB, inputC])
         })
+    })
+
+    it('should change element by predicate', () => {
+        const mockFn = jest.fn((elem, history) => history[1])
+        const focus = createFocus()
+        focus.push(inputA, inputB)
+        focus(0, mockFn)
+
+        expect(document.activeElement).toBe(inputB)
+        expect(mockFn).lastCalledWith(inputA, [inputA, inputB])
+    })
+
+    it('should ignore element by predicate', () => {
+        const mockFn = jest.fn((elem, history) => elem === inputB)
+        const focus = createFocus()
+        focus.push(inputA, inputB)
+
+        focus(0, mockFn)
+        expect(document.activeElement).toBe(document.body)
+        expect(mockFn).lastCalledWith(inputA, [inputA, inputB])
+    })
+
+    it('predicate must return element for change', () => {
+        const mockFn = jest.fn((elem, history) => 'wrong')
+        const focus = createFocus()
+        focus.push(inputA, inputB)
+
+        focus(0, mockFn)
+        expect(document.activeElement).toBe(inputA)
+        expect(mockFn).lastCalledWith(inputA, [inputA, inputB])
     })
 })
