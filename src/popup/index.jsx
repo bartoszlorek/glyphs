@@ -27,10 +27,6 @@ const INITIAL_GLYPHS_TIMEOUT = 500
 
 const searchPlaceholder = 'Search by name, unicode value or category...'
 
-const isHandler = elem => {
-    return elem && elem.classList.contains('frame-handler')
-}
-
 const RecentGlyphsContainer = GlyphsContainer.extend`
     background: #fafafa;
     margin: 0 0 5px;
@@ -49,7 +45,7 @@ class Popup extends React.Component {
             'handleCloseSelect',
             'handleHover',
             'handleCloseFlash',
-            'handleFrameMouseUp'
+            'handleFramePointerUp'
         ])
 
         this.state = {
@@ -122,7 +118,9 @@ class Popup extends React.Component {
         if (this.state.isVisible) {
             this.focus.detach()
         } else {
-            this.focus.attach()
+            this.focus
+                .push('active')
+                .attach()
         }
         this.setState(prevState => ({
             isVisible: !prevState.isVisible
@@ -165,8 +163,8 @@ class Popup extends React.Component {
         })
     }
 
-    handleFrameMouseUp(e) {
-        this.focus.prev(1, () => isHandler(e.target))
+    handleFramePointerUp() {
+        this.focus.prev(1)
     }
 
     render() {
@@ -177,7 +175,7 @@ class Popup extends React.Component {
             <Frame
                 title={'Glyphs'}
                 onClose={this.handleVisible}
-                onMouseUp={this.handleFrameMouseUp}
+                onPointerUp={this.handleFramePointerUp}
             >
                 <Header>
                     <RecentGlyphsContainer
