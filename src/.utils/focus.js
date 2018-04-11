@@ -5,7 +5,7 @@ function createFocus(limit = 10) {
         return elem === history[history.length - 1]
     }
 
-    const pushHistory = elem => {
+    const pushToHistory = elem => {
         if (elem == null || isLast(elem)) {
             return
         }
@@ -18,31 +18,27 @@ function createFocus(limit = 10) {
         history.push(elem)
     }
 
-    const handleClick = () => {
-        pushHistory(document.activeElement)
+    const pushActiveElement = () => {
+        pushToHistory(document.activeElement)
     }
 
-    const self = (index = -1, predicate) => {
-        let length = history.length
-        if (!length) {
-            return self
-        }
-
+    const self = (index, predicate) => {
         if (typeof index === 'function') {
             index = index(history)
+        }
+        let length = history.length
+        if (!length || index == null) {
+            return self
         }
         if (index < 0) {
             index = -index > length ? 0 : length + index
         } else if (index >= length) {
             index = length - 1
         }
-        if (index == null) {
-            return self
-        }
 
         let elem = history[index]
         if (typeof predicate === 'function') {
-            let result = predicate(elem)
+            let result = predicate(elem, history)
             if (result === false) {
                 return self
             }
@@ -50,25 +46,25 @@ function createFocus(limit = 10) {
                 elem = result
             }
         }
-
         elem.focus()
         return self
     }
 
     self.logger = null
     self.attach = () => {
-        document.addEventListener('click', handleClick, true)
+        document.addEventListener('click', pushActiveElement, true)
         return self
     }
     self.detach = () => {
-        document.removeEventListener('click', handleClick, true)
+        document.removeEventListener('click', pushActiveElement, true)
         return self
     }
-    self.push = elem => {
-        if (elem === 'active') {
-            elem = document.activeElement
+    self.push = (...elems) => {
+        if (elems[0] === 'active') {
+            pushActiveElement()
+        } else {
+            elems.forEach(pushToHistory)
         }
-        pushHistory(elem)
         return self
     }
 
