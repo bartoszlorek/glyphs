@@ -21,9 +21,16 @@ const Handler = styled.div`
 
 class Frame extends React.PureComponent {
     componentDidMount() {
-        this.draggable = new Draggabilly(this.refs.frameElement, {
+        let draggie = new Draggabilly(this.refs.frameElement, {
             handle: '.frame-handler'
         })
+        draggie.on('dragStart', this.props.onDragStart)
+        draggie.on('dragMove', this.props.onDragMove)
+        draggie.on('dragEnd', this.props.onDragEnd)
+        draggie.on('pointerDown', this.props.onPointerDown)
+        draggie.on('pointerUp', this.props.onPointerUp)
+        draggie.on('staticClick', this.props.onStaticClick)
+        this.draggable = draggie
     }
 
     componentWillUnmount() {
@@ -31,10 +38,10 @@ class Frame extends React.PureComponent {
     }
 
     render() {
-        let { children, title, onClose } = this.props
+        let { className, children, title, onClose } = this.props
 
         return (
-            <div {...this.props} id={titleSlug(title)} ref="frameElement">
+            <div className={className} id={titleSlug(title)} ref="frameElement">
                 <Handler className="frame-handler">
                     <span>{title}</span>
                     <ButtonClose onClick={onClose} />
@@ -47,12 +54,24 @@ class Frame extends React.PureComponent {
 
 Frame.propTypes = {
     title: PropTypes.string,
-    onClose: PropTypes.func
+    onClose: PropTypes.func,
+    onDragStart: PropTypes.func,
+    onDragMove: PropTypes.func,
+    onDragEnd: PropTypes.func,
+    onPointerDown: PropTypes.func,
+    onPointerUp: PropTypes.func,
+    onStaticClick: PropTypes.func
 }
 
 Frame.defaultProps = {
     title: '',
-    onClose: () => null
+    onClose: null,
+    onDragStart: null,
+    onDragMove: null,
+    onDragEnd: null,
+    onPointerDown: null,
+    onPointerUp: null,
+    onStaticClick: null
 }
 
 export default styled(Frame)`
