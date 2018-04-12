@@ -2,9 +2,9 @@
     "manifest_version": 2,
     "name": "Glyphs",
     "short_name": "Glyphs",
-    "version": "1.0.1",
+    "version": "1.2.0",
     "author": "Bartosz Lorek",
-    "description": "",
+    "description": "Extension provides quick access to common special characters through the dynamic window.",
     "homepage_url": "http://www.bartoszlorek.pl/",
     "permissions": [
         "activeTab"
