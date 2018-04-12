@@ -164,7 +164,7 @@ class Popup extends React.Component {
     }
 
     handleFramePointerUp() {
-        this.focus.prev(1)
+        this.focus(-1)
     }
 
     render() {
