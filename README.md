@@ -1,8 +1,8 @@
 # Glyphs
 
-Many of the special typographic features within fonts — from bullets and em dashes to fractions and ligatures — cannot be found on the keyboard. [Chrome extension](https://chrome.google.com/webstore/detail/glyphs/holbdohcbcodlejipgcmdleppjmfffhi) provides quick access to common special characters through the dynamic window displayed on the page.
+Many of the special typographic features within fonts — from bullets and em dashes to fractions — cannot be found on the keyboard. [Chrome extension](https://chrome.google.com/webstore/detail/glyphs/holbdohcbcodlejipgcmdleppjmfffhi) provides quick access to common special characters through the floating window displayed on the page.
 
-This set includes: **586** glyphs from **AGLFN** (Adobe Glyph List For New Fonts) a list of base characters that are recommended for new fonts, extended with **19** that cover all punctuation and whitespace glyphs.
+The extension glyph set includes **605 characters**, mostly from AGLFN (Adobe Glyph List For New Fonts) a list of base glyphs that are recommended for new fonts, extended with all Unicode dashes and whitespace that are especially useful to editors.
 
 Each character is assigned to one or more categories: Basic Latin and Latin 1, Extended Latin A and B, Punctuation, Dashes & Quotes, Whitespace, Currency, Numbers, Math Symbols, Symbols, Greek and Coptic
 
