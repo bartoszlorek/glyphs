@@ -11,11 +11,10 @@ const setNative = property => {
     return (element, value) => {
         let prototype = protoWithDescriptor(element)
         if (prototype == null) {
-            return false
+            return
         }
         let setter = getDescriptor(prototype).set
         setter.call(element, value)
-        return true
     }
 }
 
